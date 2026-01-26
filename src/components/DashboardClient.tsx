@@ -181,6 +181,12 @@ export function DashboardClient({ initialData, initialStats, lastUpdatedStr }: D
                             loading={loading}
                         />
                         <MacroItem
+                            label="美元兌日圓"
+                            value={stats?.usdjpy?.price.toFixed(2) || '---'}
+                            changePercent={stats?.usdjpy?.changePercent}
+                            loading={loading}
+                        />
+                        <MacroItem
                             label="美國 10年公債"
                             value={stats?.us10Y?.price ? `${stats.us10Y.price.toFixed(2)}%` : '---'}
                             changePercent={stats?.us10Y?.changePercent}
@@ -199,6 +205,12 @@ export function DashboardClient({ initialData, initialStats, lastUpdatedStr }: D
                             loading={loading}
                         />
                         <MacroItem
+                            label="乙太幣"
+                            value={`$${stats?.ethereum?.price.toLocaleString(undefined, { maximumFractionDigits: 0 }) || '---'}`}
+                            changePercent={stats?.ethereum?.changePercent}
+                            loading={loading}
+                        />
+                        <MacroItem
                             label="布蘭特原油"
                             value={`$${stats?.brentCrude?.price.toFixed(2)}`}
                             changePercent={stats?.brentCrude?.changePercent}
@@ -208,6 +220,12 @@ export function DashboardClient({ initialData, initialStats, lastUpdatedStr }: D
                             label="黃金價格"
                             value={`$${stats?.goldPrice?.price.toFixed(1) || '---'}`}
                             changePercent={stats?.goldPrice?.changePercent}
+                            loading={loading}
+                        />
+                        <MacroItem
+                            label="銅價"
+                            value={`$${stats?.copper?.price.toFixed(2) || '---'}`}
+                            changePercent={stats?.copper?.changePercent}
                             loading={loading}
                         />
                         <MacroItem

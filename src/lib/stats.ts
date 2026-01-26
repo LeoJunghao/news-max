@@ -16,7 +16,9 @@ export interface MarketStats {
     dollarIndex: MarketQuote;
     brentCrude: MarketQuote;
     goldPrice: MarketQuote;
-    bitcoin: MarketQuote;   // New
+    copper: MarketQuote; // New
+    bitcoin: MarketQuote;
+    ethereum: MarketQuote; // New   // New
     bdi: MarketQuote;
     crb: MarketQuote;
     // Major Indices
@@ -27,6 +29,7 @@ export interface MarketStats {
     twii: MarketQuote;
     // New Pro Stats
     usdtwd: MarketQuote;
+    usdjpy: MarketQuote; // New
     tsmAdr: MarketQuote;
     tsmTw: MarketQuote;
     nvda: MarketQuote;
@@ -116,9 +119,19 @@ async function getGoldPrice(): Promise<MarketQuote> {
     return getYahooQuote('GC=F');
 }
 
+// New: Ethereum Price (ETH-USD)
+async function getEthereumPrice(): Promise<MarketQuote> {
+    return getYahooQuote('ETH-USD');
+}
+
 // New: Bitcoin Price (BTC-USD)
 async function getBitcoinPrice(): Promise<MarketQuote> {
     return getYahooQuote('BTC-USD');
+}
+
+// New: Copper Price (HG=F)
+async function getCopperPrice(): Promise<MarketQuote> {
+    return getYahooQuote('HG=F');
 }
 
 // New: BDI Shipping (Source: CNBC .BADI)
@@ -199,6 +212,11 @@ async function getUSDTWD(): Promise<MarketQuote> {
     return getYahooQuote('TWD=X');
 }
 
+// New: USD/JPY (JPY=X)
+async function getUSDJPY(): Promise<MarketQuote> {
+    return getYahooQuote('JPY=X');
+}
+
 // New: TSMC ADR (TSM)
 async function getTSMADR(): Promise<MarketQuote> {
     return getYahooQuote('TSM');
@@ -221,7 +239,7 @@ async function getMSFT(): Promise<MarketQuote> {
 
 export async function getMarketStats(): Promise<MarketStats> {
     // Parallel fetch
-    const [vix, cryptoData, us10Y, us2Y, dxy, brent, goldPrice, bitcoin, bdi, crb, sox, sp500, dji, nasdaq, twii, usdtwd, tsmAdr, tsmTw, nvda, msft] = await Promise.all([
+    const [vix, cryptoData, us10Y, us2Y, dxy, brent, goldPrice, copper, bitcoin, ethereum, bdi, crb, sox, sp500, dji, nasdaq, twii, usdtwd, usdjpy, tsmAdr, tsmTw, nvda, msft] = await Promise.all([
         getVIX(),
         getCryptoFnG(),
         getUS10Y(),
@@ -229,15 +247,18 @@ export async function getMarketStats(): Promise<MarketStats> {
         getDollarIndex(),
         getBrentCrude(),
         getGoldPrice(),
+        getCopperPrice(),
         getBitcoinPrice(),
+        getEthereumPrice(),
         getBDI(),
         getCRB(),
         getSOX(),
         getSP500(),
         getDJI(),
-        getNasdaq(), // New
+        getNasdaq(),
         getTWII(),
         getUSDTWD(),
+        getUSDJPY(),
         getTSMADR(),
         getTSMTW(),
         getNVDA(),
@@ -260,15 +281,18 @@ export async function getMarketStats(): Promise<MarketStats> {
         dollarIndex: dxy,
         brentCrude: brent,
         goldPrice,
+        copper,
         bitcoin,
+        ethereum,
         bdi,
         crb,
         sox,
         sp500,
         dji,
-        nasdaq, // New
+        nasdaq,
         twii,
         usdtwd,
+        usdjpy,
         tsmAdr,
         tsmTw,
         nvda,
