@@ -274,12 +274,17 @@ export function DashboardClient({ initialData, initialStats, lastUpdatedStr }: D
                             loading={loading}
                         />
                         <IndexItem
-                            label="S&P 500"
+                            label="S&P 500 (Fut)"
                             data={stats?.sp500}
                             loading={loading}
                         />
                         <IndexItem
-                            label="道瓊工業"
+                            label="Nasdaq (Fut)"
+                            data={stats?.nasdaq}
+                            loading={loading}
+                        />
+                        <IndexItem
+                            label="道瓊工業 (Fut)"
                             data={stats?.dji}
                             loading={loading}
                         />

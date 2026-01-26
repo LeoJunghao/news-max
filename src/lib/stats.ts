@@ -23,6 +23,7 @@ export interface MarketStats {
     sox: MarketQuote;
     sp500: MarketQuote;
     dji: MarketQuote;
+    nasdaq: MarketQuote; // New
     twii: MarketQuote;
     // New Pro Stats
     usdtwd: MarketQuote;
@@ -132,10 +133,11 @@ async function getCRB(): Promise<MarketQuote> {
     return getYahooQuote('^TRCCRB');
 }
 
-// Indices Fetchers
-async function getSOX(): Promise<MarketQuote> { return getYahooQuote('%5ESOX'); }
-async function getSP500(): Promise<MarketQuote> { return getYahooQuote('%5EGSPC'); }
-async function getDJI(): Promise<MarketQuote> { return getYahooQuote('%5EDJI'); }
+// Indices Fetchers (Switched to Futures for 24h Coverage)
+async function getSOX(): Promise<MarketQuote> { return getYahooQuote('%5ESOX'); } // SOX has no liquid 24h future, keeping Index
+async function getSP500(): Promise<MarketQuote> { return getYahooQuote('ES=F'); } // S&P 500 Futures
+async function getDJI(): Promise<MarketQuote> { return getYahooQuote('YM=F'); }   // Dow Futures
+async function getNasdaq(): Promise<MarketQuote> { return getYahooQuote('NQ=F'); } // Nasdaq 100 Futures (New)
 async function getTWII(): Promise<MarketQuote> { return getYahooQuote('%5ETWII'); }
 
 // 2. Crypto Fear & Greed from Alternative.me
@@ -219,7 +221,7 @@ async function getMSFT(): Promise<MarketQuote> {
 
 export async function getMarketStats(): Promise<MarketStats> {
     // Parallel fetch
-    const [vix, cryptoData, us10Y, us2Y, dxy, brent, goldPrice, bitcoin, bdi, crb, sox, sp500, dji, twii, usdtwd, tsmAdr, tsmTw, nvda, msft] = await Promise.all([
+    const [vix, cryptoData, us10Y, us2Y, dxy, brent, goldPrice, bitcoin, bdi, crb, sox, sp500, dji, nasdaq, twii, usdtwd, tsmAdr, tsmTw, nvda, msft] = await Promise.all([
         getVIX(),
         getCryptoFnG(),
         getUS10Y(),
@@ -233,6 +235,7 @@ export async function getMarketStats(): Promise<MarketStats> {
         getSOX(),
         getSP500(),
         getDJI(),
+        getNasdaq(), // New
         getTWII(),
         getUSDTWD(),
         getTSMADR(),
@@ -263,6 +266,7 @@ export async function getMarketStats(): Promise<MarketStats> {
         sox,
         sp500,
         dji,
+        nasdaq, // New
         twii,
         usdtwd,
         tsmAdr,
