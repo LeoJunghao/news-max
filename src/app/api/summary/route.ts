@@ -51,6 +51,11 @@ export async function POST(request: Request) {
   - 台積電 ADR 溢價率: ${tsmPremium} (ADR: ${stats.tsmAdr.price}, TW: ${stats.tsmTw.price})
   - 費半指數 (SOX): ${stats.sox.price} (${stats.sox.changePercent.toFixed(2)}%)
   - AI 領頭羊 NVIDIA: $${stats.nvda.price} (${stats.nvda.changePercent.toFixed(2)}%)
+  - Microsoft: $${stats.msft.price} (${stats.msft.changePercent.toFixed(2)}%)
+  - AMD: $${stats.amd.price} (${stats.amd.changePercent.toFixed(2)}%)
+  - Google: $${stats.googl.price} (${stats.googl.changePercent.toFixed(2)}%)
+  - Meta: $${stats.meta.price} (${stats.meta.changePercent.toFixed(2)}%)
+  - Apple: $${stats.aapl.price} (${stats.aapl.changePercent.toFixed(2)}%)
 
 **即時新聞重點 (News Highlights):**
 `;

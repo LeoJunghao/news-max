@@ -34,6 +34,11 @@ export interface MarketStats {
     tsmTw: MarketQuote;
     nvda: MarketQuote;
     msft: MarketQuote;
+    mu: MarketQuote;    // New
+    meta: MarketQuote;  // New
+    googl: MarketQuote; // New
+    amd: MarketQuote;   // New
+    aapl: MarketQuote;  // New
 }
 
 // Generic helper to fetch price from Yahoo Finance Chart API
@@ -237,9 +242,34 @@ async function getMSFT(): Promise<MarketQuote> {
     return getYahooQuote('MSFT');
 }
 
+// New: Micron (MU)
+async function getMU(): Promise<MarketQuote> {
+    return getYahooQuote('MU');
+}
+
+// New: Meta (META)
+async function getMETA(): Promise<MarketQuote> {
+    return getYahooQuote('META');
+}
+
+// New: Alphabet (GOOGL)
+async function getGOOGL(): Promise<MarketQuote> {
+    return getYahooQuote('GOOGL');
+}
+
+// New: AMD (AMD)
+async function getAMD(): Promise<MarketQuote> {
+    return getYahooQuote('AMD');
+}
+
+// New: Apple (AAPL)
+async function getAAPL(): Promise<MarketQuote> {
+    return getYahooQuote('AAPL');
+}
+
 export async function getMarketStats(): Promise<MarketStats> {
     // Parallel fetch
-    const [vix, cryptoData, us10Y, us2Y, dxy, brent, goldPrice, copper, bitcoin, ethereum, bdi, crb, sox, sp500, dji, nasdaq, twii, usdtwd, usdjpy, tsmAdr, tsmTw, nvda, msft] = await Promise.all([
+    const [vix, cryptoData, us10Y, us2Y, dxy, brent, goldPrice, copper, bitcoin, ethereum, bdi, crb, sox, sp500, dji, nasdaq, twii, usdtwd, usdjpy, tsmAdr, tsmTw, nvda, msft, mu, meta, googl, amd, aapl] = await Promise.all([
         getVIX(),
         getCryptoFnG(),
         getUS10Y(),
@@ -262,7 +292,12 @@ export async function getMarketStats(): Promise<MarketStats> {
         getTSMADR(),
         getTSMTW(),
         getNVDA(),
-        getMSFT()
+        getMSFT(),
+        getMU(),
+        getMETA(),
+        getGOOGL(),
+        getAMD(),
+        getAAPL()
     ]);
 
     // Dependent stats
@@ -296,6 +331,11 @@ export async function getMarketStats(): Promise<MarketStats> {
         tsmAdr,
         tsmTw,
         nvda,
-        msft
+        msft,
+        mu,
+        meta,
+        googl,
+        amd,
+        aapl
     };
 }

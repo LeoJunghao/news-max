@@ -253,14 +253,32 @@ export function DashboardClient({ initialData, initialStats, lastUpdatedStr }: D
                     className="max-w-7xl mx-auto mb-6 px-4 md:px-0"
                 >
                     <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 p-4 bg-indigo-500/5 border-y border-indigo-500/20 backdrop-blur-sm">
-                        <div className="col-span-2 lg:col-span-1 flex items-center gap-2 text-indigo-400 font-bold font-mono text-sm tracking-wider uppercase">
+                        <div className="col-span-2 lg:col-span-4 flex items-center gap-2 text-indigo-400 font-bold font-mono text-sm tracking-wider uppercase mb-2">
                             <Cpu size={16} />
-                            AI Leaders
+                            AI &amp; Tech Giants
                         </div>
                         <MacroItem
                             label="NVIDIA"
                             value={stats?.nvda?.price ? `$${stats.nvda.price.toFixed(2)}` : '---'}
                             changePercent={stats?.nvda?.changePercent}
+                            loading={loading}
+                        />
+                        <MacroItem
+                            label="TSMC ADR"
+                            value={stats?.tsmAdr?.price ? `$${stats.tsmAdr.price.toFixed(2)}` : '---'}
+                            changePercent={stats?.tsmAdr?.changePercent}
+                            loading={loading}
+                        />
+                        <MacroItem
+                            label="AMD"
+                            value={stats?.amd?.price ? `$${stats.amd.price.toFixed(2)}` : '---'}
+                            changePercent={stats?.amd?.changePercent}
+                            loading={loading}
+                        />
+                        <MacroItem
+                            label="Micron"
+                            value={stats?.mu?.price ? `$${stats.mu.price.toFixed(2)}` : '---'}
+                            changePercent={stats?.mu?.changePercent}
                             loading={loading}
                         />
                         <MacroItem
@@ -270,9 +288,21 @@ export function DashboardClient({ initialData, initialStats, lastUpdatedStr }: D
                             loading={loading}
                         />
                         <MacroItem
-                            label="TSMC ADR"
-                            value={stats?.tsmAdr?.price ? `$${stats.tsmAdr.price.toFixed(2)}` : '---'}
-                            changePercent={stats?.tsmAdr?.changePercent}
+                            label="Google"
+                            value={stats?.googl?.price ? `$${stats.googl.price.toFixed(2)}` : '---'}
+                            changePercent={stats?.googl?.changePercent}
+                            loading={loading}
+                        />
+                        <MacroItem
+                            label="Meta"
+                            value={stats?.meta?.price ? `$${stats.meta.price.toFixed(2)}` : '---'}
+                            changePercent={stats?.meta?.changePercent}
+                            loading={loading}
+                        />
+                        <MacroItem
+                            label="Apple"
+                            value={stats?.aapl?.price ? `$${stats.aapl.price.toFixed(2)}` : '---'}
+                            changePercent={stats?.aapl?.changePercent}
                             loading={loading}
                         />
                     </div>
