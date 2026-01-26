@@ -22,23 +22,25 @@ export async function POST(request: Request) {
             ? (((stats.tsmAdr.price * stats.usdtwd.price / 5) - stats.tsmTw.price) / stats.tsmTw.price * 100).toFixed(2) + '%'
             : 'N/A';
 
+        const now = new Date().toLocaleString('zh-TW', { timeZone: 'Asia/Taipei', hour12: false });
+
         // Construct the prompt
         let prompt = `請擔任一位專業的全球總體經濟分析師，根據以下提供的即時財經新聞與市場數據，撰寫一份「市場總結分析報告」。
 
+**嚴格規則 (Strict Rules):**
+1.  **目前時間**：${now}。所有分析必須基於此時間點的市場狀態。
+2.  **拒絕幻覺**：絕對禁止編造未出現在「提供的市場數據」或「即時新聞重點」中的具體事件或數字。若資料不足請直接說明，不要瞎掰。
+3.  **數據一致**：報告中引用的指數價格與漲跌幅，必須完全與下方提供的數據一致。
+
 **風格與內容要求：**
 1.  **冷靜、客觀、專業**：使用財經專業用語，語氣簡潔有力。
-2.  **數據驅動**：必須引用提供的數據（如利差、溢價率）來佐證論點。
-3.  **情境推演 (Scenario Analysis)**：在結尾處，請根據當前數據提供「多方」與「空方」的短線劇本推演。
-4.  **結構嚴謹**：
-    -   **綜合市場掃描**：總結宏觀氛圍與資金流向。
-    -   **關鍵因子分析**：針對「美債利差」、「台積電溢價」、「AI 領頭羊」進行深入解讀。
-    -   **區域市場觀察**：歐美與台灣市場重點。
-    -   **投資劇本推演**：多空情境與風險提示。
-5.  **繁體中文** (Traditional Chinese)。
+2.  **數據驅動**：引用提供的利差、溢價率等數據來佐證論點。
+3.  **情境推演**：在結尾處，根據數據提供「多方」與「空方」的短線劇本。
+4.  **繁體中文** (Traditional Chinese)。
 
 **關鍵市場數據 (Market Data):**
 - **宏觀指標**:
-  - 美債殖利率曲線 (10Y-2Y Spread): ${spread}% (10Y: ${stats.us10Y?.price}%, 2Y: ${stats.us2Y.price}%) - 若為負值代表倒掛。
+  - 美債殖利率曲線 (10Y-2Y Spread): ${spread}% (10Y: ${stats.us10Y?.price}%, 2Y: ${stats.us2Y.price}%)
   - 美元指數: ${stats.dollarIndex?.price.toFixed(2)}
   - 美元兌台幣 (USD/TWD): ${stats.usdtwd?.price.toFixed(2)}
 - **情緒指標**:
