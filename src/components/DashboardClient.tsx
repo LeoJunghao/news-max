@@ -338,7 +338,7 @@ export function DashboardClient({ initialData, initialStats, lastUpdatedStr }: D
                     <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 p-4 bg-purple-500/5 border-y border-purple-500/20 backdrop-blur-sm">
                         <div className="col-span-2 lg:col-span-4 flex items-center gap-2 text-purple-400 font-bold font-mono text-sm tracking-wider uppercase mb-2">
                             <Cpu size={16} />
-                            台灣權值 (Taiwan Weighted Leaders)
+                            台灣權值
                         </div>
                         <MacroItem
                             label="台積電 (2330)"
@@ -395,7 +395,7 @@ export function DashboardClient({ initialData, initialStats, lastUpdatedStr }: D
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-3 p-4 bg-purple-500/5 border-y border-purple-500/20 backdrop-blur-sm">
                         <div className="col-span-2 md:col-span-4 flex items-center gap-2 text-purple-400 font-bold font-mono text-sm tracking-wider uppercase mb-2">
                             <TrendingUp size={16} />
-                            主要股市指數 (Major Market Indices)
+                            主要股市指數
                         </div>
                         <IndexItem
                             label="費城半導體"
@@ -630,7 +630,7 @@ function MacroItem({ label, value, changePercent, loading, url }: { label: strin
 
     const content = (
         <div className="flex flex-col items-center justify-center p-3 rounded-lg border border-cyan-500/20 bg-slate-900/40 hover:bg-slate-800/60 hover:border-cyan-500/40 transition-all group w-full h-full">
-            <span className="text-[10px] font-bold font-mono text-purple-400 uppercase tracking-tighter mb-1.5 text-center flex items-center gap-1 drop-shadow-[0_0_3px_rgba(168,85,247,0.5)]">
+            <span className="text-sm font-bold font-mono text-purple-400 uppercase tracking-tighter mb-1.5 text-center flex items-center gap-1 drop-shadow-[0_0_3px_rgba(168,85,247,0.5)]">
                 {label}
             </span>
             <span className="text-xl font-bold font-mono tracking-tight text-slate-100 group-hover:text-white transition-colors">
