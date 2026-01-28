@@ -169,7 +169,7 @@ export function DashboardClient({ initialData, initialStats, lastUpdatedStr }: D
                     <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 p-4 bg-emerald-500/5 border-y border-emerald-500/20 backdrop-blur-sm">
                         <MacroItem
                             label="美債利差 10Y-2Y"
-                            value={stats?.us10Y?.price && stats?.us2Y?.price ? `${(stats.us10Y.price - stats.us2Y.price).toFixed(2)}%` : '---'}
+                            value={stats?.spread?.price ? `${stats.spread.price.toFixed(3)}%` : '---'}
                             // Negative spread is bad (Recession signal), can color code if needed, but here using changePercent is tricky as spread has no changePercent. Let's assume red if negative.
                             changePercent={undefined}
                             loading={loading}

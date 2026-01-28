@@ -13,6 +13,7 @@ export interface MarketStats {
     // New Macro Indicators
     us10Y: MarketQuote;
     us2Y: MarketQuote;
+    spread: MarketQuote; // New
     dollarIndex: MarketQuote;
     brentCrude: MarketQuote;
     goldPrice: MarketQuote;
@@ -76,7 +77,12 @@ async function getYahooQuote(symbol: string): Promise<MarketQuote> {
 // Helper to fetch from CNBC (better for US Yields & BDI)
 async function getCNBCPrice(symbol: string, fallback: number): Promise<MarketQuote> {
     try {
-        const res = await fetch(`https://quote.cnbc.com/quote-html-webservice/quote.htm?partnerId=2&requestMethod=quick&exthrs=1&noform=1&fund=1&output=json&symbols=${symbol}`, { next: { revalidate: 60 } });
+        const res = await fetch(`https://quote.cnbc.com/quote-html-webservice/quote.htm?partnerId=2&requestMethod=quick&exthrs=1&noform=1&fund=1&output=json&symbols=${symbol}`, {
+            next: { revalidate: 60 },
+            headers: {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+            }
+        });
         if (!res.ok) return { price: fallback, changePercent: 0 };
         const text = await res.text();
         const data = JSON.parse(text);
@@ -102,11 +108,14 @@ async function getUS10Y(): Promise<MarketQuote> {
     return getCNBCPrice('US10Y', 4.0);
 }
 
-// New: US 2Y Treasury Bond (Source: Yahoo ^IRX is 13 week, ^FVX is 5 year. ^TU is not available directly on public yahoo easily. Let's try CNBC or use ^UST2Y if available, but ^TNX is standard. 
-// Standard Yahoo symbols for treasuries: ^TNX (10y), ^TYX (30y), ^FVX (5y), ^IRX (13w). 2Y is harder. 
-// We can use CNBC for US2Y which we already have helper for.
+// New: US 2Y Treasury Bond
 async function getUS2Y(): Promise<MarketQuote> {
     return getCNBCPrice('US2Y', 4.0);
+}
+
+// New: Yield Spread (10Y-2Y)
+async function getSpread(): Promise<MarketQuote> {
+    return getCNBCPrice('10Y2YS', 0.0);
 }
 
 // New: Dollar Index (DX-Y.NYB)
@@ -269,11 +278,12 @@ async function getAAPL(): Promise<MarketQuote> {
 
 export async function getMarketStats(): Promise<MarketStats> {
     // Parallel fetch
-    const [vix, cryptoData, us10Y, us2Y, dxy, brent, goldPrice, copper, bitcoin, ethereum, bdi, crb, sox, sp500, dji, nasdaq, twii, usdtwd, usdjpy, tsmAdr, tsmTw, nvda, msft, mu, meta, googl, amd, aapl] = await Promise.all([
+    const [vix, cryptoData, us10Y, us2Y, spread, dxy, brent, goldPrice, copper, bitcoin, ethereum, bdi, crb, sox, sp500, dji, nasdaq, twii, usdtwd, usdjpy, tsmAdr, tsmTw, nvda, msft, mu, meta, googl, amd, aapl] = await Promise.all([
         getVIX(),
         getCryptoFnG(),
         getUS10Y(),
         getUS2Y(),
+        getSpread(),
         getDollarIndex(),
         getBrentCrude(),
         getGoldPrice(),
@@ -313,6 +323,7 @@ export async function getMarketStats(): Promise<MarketStats> {
         goldSentiment: goldData,
         us10Y,
         us2Y,
+        spread,
         dollarIndex: dxy,
         brentCrude: brent,
         goldPrice,
