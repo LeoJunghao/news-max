@@ -404,19 +404,19 @@ export function DashboardClient({ initialData, initialStats, lastUpdatedStr }: D
                             url="https://finance.yahoo.com/quote/%5ESOX"
                         />
                         <IndexItem
-                            label="S&P 500 (Fut)"
+                            label="S&P 500"
                             data={stats?.sp500}
                             loading={loading}
                             url="https://finance.yahoo.com/quote/ES=F"
                         />
                         <IndexItem
-                            label="Nasdaq (Fut)"
+                            label="Nasdaq"
                             data={stats?.nasdaq}
                             loading={loading}
                             url="https://finance.yahoo.com/quote/NQ=F"
                         />
                         <IndexItem
-                            label="道瓊工業 (Fut)"
+                            label="道瓊工業"
                             data={stats?.dji}
                             loading={loading}
                             url="https://finance.yahoo.com/quote/YM=F"
@@ -428,7 +428,7 @@ export function DashboardClient({ initialData, initialStats, lastUpdatedStr }: D
                             url="https://finance.yahoo.com/quote/%5ETWII"
                         />
                         <IndexItem
-                            label="櫃買指數 (OTC)"
+                            label="櫃買指數"
                             data={stats?.otc}
                             loading={loading}
                             url="https://finance.yahoo.com/quote/%5ETWO"
