@@ -392,7 +392,7 @@ export function DashboardClient({ initialData, initialStats, lastUpdatedStr }: D
                     transition={{ delay: 0.05 }}
                     className="max-w-7xl mx-auto mb-6 px-4 md:px-0"
                 >
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3 p-4 bg-purple-500/5 border-y border-purple-500/20 backdrop-blur-sm">
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3 p-4 border-y border-purple-500/20 backdrop-blur-sm">
                         <div className="col-span-2 md:col-span-4 flex items-center gap-2 text-purple-400 font-bold font-mono text-sm tracking-wider uppercase mb-2">
                             <TrendingUp size={16} />
                             主要股市指數
@@ -588,7 +588,7 @@ function IndexItem({ label, data, loading, url }: { label: string, data?: Market
     const isUp = data.changePercent >= 0;
     const colorClass = isUp ? 'text-red-400' : 'text-green-400';
     // Cold light purple style as requested
-    const bgClass = 'bg-purple-500/10 border-purple-500/20 shadow-[0_0_15px_rgba(168,85,247,0.1)]';
+    const bgClass = 'bg-slate-950 border-purple-500/20 shadow-[0_0_15px_rgba(168,85,247,0.1)]';
 
     const content = (
         <div className={cn("flex flex-col items-center justify-center p-3 rounded-xl border backdrop-blur-sm transition-all hover:bg-opacity-80 hover:scale-[1.02]", bgClass)}>
