@@ -173,66 +173,77 @@ export function DashboardClient({ initialData, initialStats, lastUpdatedStr }: D
                             // Negative spread is bad (Recession signal), can color code if needed, but here using changePercent is tricky as spread has no changePercent. Let's assume red if negative.
                             changePercent={undefined}
                             loading={loading}
+                            url="https://www.cnbc.com/quotes/10Y2YS"
                         />
                         <MacroItem
                             label="美元兌台幣"
                             value={stats?.usdtwd?.price.toFixed(2) || '---'}
                             changePercent={stats?.usdtwd?.changePercent}
                             loading={loading}
+                            url="https://finance.yahoo.com/quote/TWD=X"
                         />
                         <MacroItem
                             label="美元兌日圓"
                             value={stats?.usdjpy?.price.toFixed(2) || '---'}
                             changePercent={stats?.usdjpy?.changePercent}
                             loading={loading}
+                            url="https://finance.yahoo.com/quote/JPY=X"
                         />
                         <MacroItem
                             label="美國 10年公債"
                             value={stats?.us10Y?.price ? `${stats.us10Y.price.toFixed(2)}%` : '---'}
                             changePercent={stats?.us10Y?.changePercent}
                             loading={loading}
+                            url="https://www.cnbc.com/quotes/US10Y"
                         />
                         <MacroItem
                             label="美元指數"
                             value={stats?.dollarIndex?.price.toFixed(2) || '---'}
                             changePercent={stats?.dollarIndex?.changePercent}
                             loading={loading}
+                            url="https://www.cnbc.com/quotes/.DXY"
                         />
                         <MacroItem
                             label="比特幣"
                             value={`$${stats?.bitcoin?.price.toLocaleString(undefined, { maximumFractionDigits: 0 }) || '---'}`}
                             changePercent={stats?.bitcoin?.changePercent}
                             loading={loading}
+                            url="https://finance.yahoo.com/quote/BTC-USD"
                         />
                         <MacroItem
                             label="乙太幣"
                             value={`$${stats?.ethereum?.price.toLocaleString(undefined, { maximumFractionDigits: 0 }) || '---'}`}
                             changePercent={stats?.ethereum?.changePercent}
                             loading={loading}
+                            url="https://finance.yahoo.com/quote/ETH-USD"
                         />
                         <MacroItem
                             label="布蘭特原油"
                             value={`$${stats?.brentCrude?.price.toFixed(2)}`}
                             changePercent={stats?.brentCrude?.changePercent}
                             loading={loading}
+                            url="https://finance.yahoo.com/quote/BZ=F"
                         />
                         <MacroItem
                             label="黃金價格"
                             value={`$${stats?.goldPrice?.price.toFixed(1) || '---'}`}
                             changePercent={stats?.goldPrice?.changePercent}
                             loading={loading}
+                            url="https://finance.yahoo.com/quote/GC=F"
                         />
                         <MacroItem
                             label="銅價"
                             value={`$${stats?.copper?.price.toFixed(2) || '---'}`}
                             changePercent={stats?.copper?.changePercent}
                             loading={loading}
+                            url="https://finance.yahoo.com/quote/HG=F"
                         />
                         <MacroItem
                             label="BDI 航運"
                             value={`${stats?.bdi?.price.toFixed(0) || '---'}`}
                             changePercent={stats?.bdi?.changePercent}
                             loading={loading}
+                            url="https://www.cnbc.com/quotes/.BADI"
                         />
                         <MacroItem
                             label="台積電溢價"
@@ -241,6 +252,7 @@ export function DashboardClient({ initialData, initialStats, lastUpdatedStr }: D
                                 : '---'}
                             changePercent={undefined}
                             loading={loading}
+                            url="https://finance.yahoo.com/quote/2330.TW"
                         />
                     </div>
                 </motion.div>
@@ -262,48 +274,56 @@ export function DashboardClient({ initialData, initialStats, lastUpdatedStr }: D
                             value={stats?.nvda?.price ? `$${stats.nvda.price.toFixed(2)}` : '---'}
                             changePercent={stats?.nvda?.changePercent}
                             loading={loading}
+                            url="https://finance.yahoo.com/quote/NVDA"
                         />
                         <MacroItem
                             label="TSMC ADR"
                             value={stats?.tsmAdr?.price ? `$${stats.tsmAdr.price.toFixed(2)}` : '---'}
                             changePercent={stats?.tsmAdr?.changePercent}
                             loading={loading}
+                            url="https://finance.yahoo.com/quote/TSM"
                         />
                         <MacroItem
                             label="AMD"
                             value={stats?.amd?.price ? `$${stats.amd.price.toFixed(2)}` : '---'}
                             changePercent={stats?.amd?.changePercent}
                             loading={loading}
+                            url="https://finance.yahoo.com/quote/AMD"
                         />
                         <MacroItem
                             label="Micron"
                             value={stats?.mu?.price ? `$${stats.mu.price.toFixed(2)}` : '---'}
                             changePercent={stats?.mu?.changePercent}
                             loading={loading}
+                            url="https://finance.yahoo.com/quote/MU"
                         />
                         <MacroItem
                             label="Microsoft"
                             value={stats?.msft?.price ? `$${stats.msft.price.toFixed(2)}` : '---'}
                             changePercent={stats?.msft?.changePercent}
                             loading={loading}
+                            url="https://finance.yahoo.com/quote/MSFT"
                         />
                         <MacroItem
                             label="Google"
                             value={stats?.googl?.price ? `$${stats.googl.price.toFixed(2)}` : '---'}
                             changePercent={stats?.googl?.changePercent}
                             loading={loading}
+                            url="https://finance.yahoo.com/quote/GOOGL"
                         />
                         <MacroItem
                             label="Meta"
                             value={stats?.meta?.price ? `$${stats.meta.price.toFixed(2)}` : '---'}
                             changePercent={stats?.meta?.changePercent}
                             loading={loading}
+                            url="https://finance.yahoo.com/quote/META"
                         />
                         <MacroItem
                             label="Apple"
                             value={stats?.aapl?.price ? `$${stats.aapl.price.toFixed(2)}` : '---'}
                             changePercent={stats?.aapl?.changePercent}
                             loading={loading}
+                            url="https://finance.yahoo.com/quote/AAPL"
                         />
                     </div>
                 </motion.div>
@@ -320,26 +340,31 @@ export function DashboardClient({ initialData, initialStats, lastUpdatedStr }: D
                             label="費城半導體"
                             data={stats?.sox}
                             loading={loading}
+                            url="https://finance.yahoo.com/quote/%5ESOX"
                         />
                         <IndexItem
                             label="S&P 500 (Fut)"
                             data={stats?.sp500}
                             loading={loading}
+                            url="https://finance.yahoo.com/quote/ES=F"
                         />
                         <IndexItem
                             label="Nasdaq (Fut)"
                             data={stats?.nasdaq}
                             loading={loading}
+                            url="https://finance.yahoo.com/quote/NQ=F"
                         />
                         <IndexItem
                             label="道瓊工業 (Fut)"
                             data={stats?.dji}
                             loading={loading}
+                            url="https://finance.yahoo.com/quote/YM=F"
                         />
                         <IndexItem
                             label="台股加權"
                             data={stats?.twii}
                             loading={loading}
+                            url="https://finance.yahoo.com/quote/%5ETWII"
                         />
                     </div>
                 </motion.div>
@@ -356,6 +381,7 @@ export function DashboardClient({ initialData, initialStats, lastUpdatedStr }: D
                             label="恐懼貪婪指數"
                             value={stats?.stockFnG || 50}
                             loading={loading && !stats}
+                            url="https://edition.cnn.com/markets/fear-and-greed"
                         />
                         <Gauge
                             label="VIX 波動率"
@@ -363,16 +389,19 @@ export function DashboardClient({ initialData, initialStats, lastUpdatedStr }: D
                             max={60}
                             unit=""
                             loading={loading && !stats}
+                            url="https://finance.yahoo.com/quote/%5EVIX"
                         />
                         <Gauge
                             label="加密貨幣貪婪"
                             value={stats?.cryptoFnG || 50}
                             loading={loading && !stats}
+                            url="https://alternative.me/crypto/fear-and-greed-index/"
                         />
                         <Gauge
                             label="黃金情緒"
                             value={stats?.goldSentiment || 50}
                             loading={loading && !stats}
+                            url="https://finance.yahoo.com/quote/GC=F"
                         />
                     </div>
                 </motion.div>
@@ -469,7 +498,7 @@ export function DashboardClient({ initialData, initialStats, lastUpdatedStr }: D
     );
 }
 
-function IndexItem({ label, data, loading }: { label: string, data?: MarketQuote, loading: boolean }) {
+function IndexItem({ label, data, loading, url }: { label: string, data?: MarketQuote, loading: boolean, url?: string }) {
     if (loading || !data) return (
         <div className="flex flex-col items-center justify-center p-3 rounded-xl bg-slate-900/50 border border-slate-800 animate-pulse h-[80px]">
             <div className="h-3 w-16 bg-slate-800 rounded mb-2"></div>
@@ -482,7 +511,7 @@ function IndexItem({ label, data, loading }: { label: string, data?: MarketQuote
     // Cold light purple style as requested
     const bgClass = 'bg-purple-500/10 border-purple-500/20 shadow-[0_0_15px_rgba(168,85,247,0.1)]';
 
-    return (
+    const content = (
         <div className={cn("flex flex-col items-center justify-center p-3 rounded-xl border backdrop-blur-sm transition-all hover:bg-opacity-80 hover:scale-[1.02]", bgClass)}>
             <span className="text-[10px] font-bold text-purple-300/80 tracking-wider mb-1 uppercase">{label}</span>
             <div className="flex items-baseline gap-2">
@@ -497,9 +526,18 @@ function IndexItem({ label, data, loading }: { label: string, data?: MarketQuote
             </div>
         </div>
     );
+
+    if (url) {
+        return (
+            <a href={url} target="_blank" rel="noopener noreferrer" className="block h-full">
+                {content}
+            </a>
+        );
+    }
+    return content;
 }
 
-function MacroItem({ label, value, changePercent, loading }: { label: string, value: string, changePercent?: number, loading: boolean }) {
+function MacroItem({ label, value, changePercent, loading, url }: { label: string, value: string, changePercent?: number, loading: boolean, url?: string }) {
     if (loading) return (
         <div className="flex flex-col items-center justify-center p-3 rounded-lg border border-slate-700 bg-slate-900/50 animate-pulse h-[80px] w-full">
             <div className="h-3 w-20 bg-slate-800 rounded mb-2"></div>
@@ -511,8 +549,8 @@ function MacroItem({ label, value, changePercent, loading }: { label: string, va
     // Taiwan logic: Red = Up, Green = Down
     const trendColor = isUp ? 'text-red-400' : 'text-green-400';
 
-    return (
-        <div className="flex flex-col items-center justify-center p-3 rounded-lg border border-cyan-500/20 bg-slate-900/40 hover:bg-slate-800/60 hover:border-cyan-500/40 transition-all group w-full">
+    const content = (
+        <div className="flex flex-col items-center justify-center p-3 rounded-lg border border-cyan-500/20 bg-slate-900/40 hover:bg-slate-800/60 hover:border-cyan-500/40 transition-all group w-full h-full">
             <span className="text-[10px] font-bold font-mono text-purple-400 uppercase tracking-tighter mb-1.5 text-center flex items-center gap-1 drop-shadow-[0_0_3px_rgba(168,85,247,0.5)]">
                 {label}
             </span>
@@ -526,4 +564,13 @@ function MacroItem({ label, value, changePercent, loading }: { label: string, va
             )}
         </div>
     );
+
+    if (url) {
+        return (
+            <a href={url} target="_blank" rel="noopener noreferrer" className="block w-full h-full">
+                {content}
+            </a>
+        );
+    }
+    return content;
 }

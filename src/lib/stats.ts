@@ -44,7 +44,7 @@ export interface MarketStats {
 // Generic helper to fetch price from Yahoo Finance Chart API
 async function getYahooPrice(symbol: string, fallback: number): Promise<number> {
     try {
-        const res = await fetch(`https://query1.finance.yahoo.com/v8/finance/chart/${symbol}?interval=1d&range=1d`, { next: { revalidate: 300 } });
+        const res = await fetch(`https://query1.finance.yahoo.com/v8/finance/chart/${symbol}?interval=1d&range=1d`, { next: { revalidate: 60 } });
         if (!res.ok) return fallback;
         const data = await res.json();
         const quote = data.chart?.result?.[0]?.meta?.regularMarketPrice;
@@ -58,7 +58,7 @@ async function getYahooPrice(symbol: string, fallback: number): Promise<number> 
 // Helper to fetch full quote (price + change%)
 async function getYahooQuote(symbol: string): Promise<MarketQuote> {
     try {
-        const res = await fetch(`https://query1.finance.yahoo.com/v8/finance/chart/${symbol}?interval=1d&range=1d`, { next: { revalidate: 300 } });
+        const res = await fetch(`https://query1.finance.yahoo.com/v8/finance/chart/${symbol}?interval=1d&range=1d`, { next: { revalidate: 60 } });
         if (!res.ok) return { price: 0, changePercent: 0 };
         const data = await res.json();
         const meta = data.chart?.result?.[0]?.meta;
@@ -76,7 +76,7 @@ async function getYahooQuote(symbol: string): Promise<MarketQuote> {
 // Helper to fetch from CNBC (better for US Yields & BDI)
 async function getCNBCPrice(symbol: string, fallback: number): Promise<MarketQuote> {
     try {
-        const res = await fetch(`https://quote.cnbc.com/quote-html-webservice/quote.htm?partnerId=2&requestMethod=quick&exthrs=1&noform=1&fund=1&output=json&symbols=${symbol}`, { next: { revalidate: 300 } });
+        const res = await fetch(`https://quote.cnbc.com/quote-html-webservice/quote.htm?partnerId=2&requestMethod=quick&exthrs=1&noform=1&fund=1&output=json&symbols=${symbol}`, { next: { revalidate: 60 } });
         if (!res.ok) return { price: fallback, changePercent: 0 };
         const text = await res.text();
         const data = JSON.parse(text);
@@ -99,7 +99,7 @@ async function getVIX(): Promise<number> {
 
 // New: US 10Y Treasury Yield (^TNX)
 async function getUS10Y(): Promise<MarketQuote> {
-    return getYahooQuote('%5ETNX');
+    return getCNBCPrice('US10Y', 4.0);
 }
 
 // New: US 2Y Treasury Bond (Source: Yahoo ^IRX is 13 week, ^FVX is 5 year. ^TU is not available directly on public yahoo easily. Let's try CNBC or use ^UST2Y if available, but ^TNX is standard. 
@@ -111,7 +111,7 @@ async function getUS2Y(): Promise<MarketQuote> {
 
 // New: Dollar Index (DX-Y.NYB)
 async function getDollarIndex(): Promise<MarketQuote> {
-    return getYahooQuote('DX-Y.NYB');
+    return getCNBCPrice('.DXY', 100);
 }
 
 // New: Brent Crude Oil (BZ=F)
