@@ -40,6 +40,12 @@ export interface MarketStats {
     googl: MarketQuote; // New
     amd: MarketQuote;   // New
     aapl: MarketQuote;  // New
+    // Taiwan Tech F4 & OTC
+    foxconn: MarketQuote; // 2317
+    mediatek: MarketQuote; // 2454
+    quanta: MarketQuote; // 2382
+    delta: MarketQuote; // 2308
+    otc: MarketQuote; // ^TWO
 }
 
 // Generic helper to fetch price from Yahoo Finance Chart API
@@ -276,9 +282,16 @@ async function getAAPL(): Promise<MarketQuote> {
     return getYahooQuote('AAPL');
 }
 
+// Taiwan Tech F4
+async function getFoxconn(): Promise<MarketQuote> { return getYahooQuote('2317.TW'); }
+async function getMediaTek(): Promise<MarketQuote> { return getYahooQuote('2454.TW'); }
+async function getQuanta(): Promise<MarketQuote> { return getYahooQuote('2382.TW'); }
+async function getDelta(): Promise<MarketQuote> { return getYahooQuote('2308.TW'); }
+async function getOTC(): Promise<MarketQuote> { return getYahooQuote('^TWO'); }
+
 export async function getMarketStats(): Promise<MarketStats> {
     // Parallel fetch
-    const [vix, cryptoData, us10Y, us2Y, spread, dxy, brent, goldPrice, copper, bitcoin, ethereum, bdi, crb, sox, sp500, dji, nasdaq, twii, usdtwd, usdjpy, tsmAdr, tsmTw, nvda, msft, mu, meta, googl, amd, aapl] = await Promise.all([
+    const [vix, cryptoData, us10Y, us2Y, spread, dxy, brent, goldPrice, copper, bitcoin, ethereum, bdi, crb, sox, sp500, dji, nasdaq, twii, usdtwd, usdjpy, tsmAdr, tsmTw, nvda, msft, mu, meta, googl, amd, aapl, foxconn, mediatek, quanta, delta, otc] = await Promise.all([
         getVIX(),
         getCryptoFnG(),
         getUS10Y(),
@@ -307,7 +320,12 @@ export async function getMarketStats(): Promise<MarketStats> {
         getMETA(),
         getGOOGL(),
         getAMD(),
-        getAAPL()
+        getAAPL(),
+        getFoxconn(),
+        getMediaTek(),
+        getQuanta(),
+        getDelta(),
+        getOTC()
     ]);
 
     // Dependent stats
@@ -347,6 +365,11 @@ export async function getMarketStats(): Promise<MarketStats> {
         meta,
         googl,
         amd,
-        aapl
+        aapl,
+        foxconn,
+        mediatek,
+        quanta,
+        delta,
+        otc
     };
 }

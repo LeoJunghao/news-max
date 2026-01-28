@@ -328,6 +328,49 @@ export function DashboardClient({ initialData, initialStats, lastUpdatedStr }: D
                     </div>
                 </motion.div>
 
+                {/* Taiwan Tech F4 Section (New) */}
+                <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.1 }}
+                    className="max-w-7xl mx-auto mb-6 px-4 md:px-0"
+                >
+                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 p-4 bg-purple-500/5 border-y border-purple-500/20 backdrop-blur-sm">
+                        <div className="col-span-2 lg:col-span-4 flex items-center gap-2 text-purple-400 font-bold font-mono text-sm tracking-wider uppercase mb-2">
+                            <Cpu size={16} />
+                            Taiwan Tech Leads & AI Supply Chain
+                        </div>
+                        <MacroItem
+                            label="鴻海 (2317)"
+                            value={stats?.foxconn?.price ? `$${stats.foxconn.price.toFixed(1)}` : '---'}
+                            changePercent={stats?.foxconn?.changePercent}
+                            loading={loading}
+                            url="https://finance.yahoo.com/quote/2317.TW"
+                        />
+                        <MacroItem
+                            label="聯發科 (2454)"
+                            value={stats?.mediatek?.price ? `$${stats.mediatek.price.toFixed(0)}` : '---'}
+                            changePercent={stats?.mediatek?.changePercent}
+                            loading={loading}
+                            url="https://finance.yahoo.com/quote/2454.TW"
+                        />
+                        <MacroItem
+                            label="廣達 (2382)"
+                            value={stats?.quanta?.price ? `$${stats.quanta.price.toFixed(1)}` : '---'}
+                            changePercent={stats?.quanta?.changePercent}
+                            loading={loading}
+                            url="https://finance.yahoo.com/quote/2382.TW"
+                        />
+                        <MacroItem
+                            label="台達電 (2308)"
+                            value={stats?.delta?.price ? `$${stats.delta.price.toFixed(1)}` : '---'}
+                            changePercent={stats?.delta?.changePercent}
+                            loading={loading}
+                            url="https://finance.yahoo.com/quote/2308.TW"
+                        />
+                    </div>
+                </motion.div>
+
                 {/* Major Indices Section */}
                 <motion.div
                     initial={{ opacity: 0, y: -10 }}
@@ -365,6 +408,12 @@ export function DashboardClient({ initialData, initialStats, lastUpdatedStr }: D
                             data={stats?.twii}
                             loading={loading}
                             url="https://finance.yahoo.com/quote/%5ETWII"
+                        />
+                        <IndexItem
+                            label="櫃買指數 (OTC)"
+                            data={stats?.otc}
+                            loading={loading}
+                            url="https://finance.yahoo.com/quote/%5ETWO"
                         />
                     </div>
                 </motion.div>
