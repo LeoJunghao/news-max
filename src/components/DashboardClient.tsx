@@ -264,8 +264,8 @@ export function DashboardClient({ initialData, initialStats, lastUpdatedStr }: D
                     transition={{ delay: 0.05 }}
                     className="max-w-7xl mx-auto mb-6 px-4 md:px-0"
                 >
-                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 p-4 bg-indigo-500/5 border-y border-indigo-500/20 backdrop-blur-sm">
-                        <div className="col-span-2 lg:col-span-4 flex items-center gap-2 text-indigo-400 font-bold font-mono text-sm tracking-wider uppercase mb-2">
+                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 p-4 bg-cyan-500/5 border-y border-cyan-500/20 backdrop-blur-sm">
+                        <div className="col-span-2 lg:col-span-4 flex items-center gap-2 text-cyan-400 font-bold font-mono text-sm tracking-wider uppercase mb-2">
                             <Cpu size={16} />
                             AI &amp; Tech Giants
                         </div>
@@ -335,8 +335,8 @@ export function DashboardClient({ initialData, initialStats, lastUpdatedStr }: D
                     transition={{ delay: 0.1 }}
                     className="max-w-7xl mx-auto mb-6 px-4 md:px-0"
                 >
-                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 p-4 bg-purple-500/5 border-y border-purple-500/20 backdrop-blur-sm">
-                        <div className="col-span-2 lg:col-span-4 flex items-center gap-2 text-purple-400 font-bold font-mono text-sm tracking-wider uppercase mb-2">
+                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 p-4 bg-cyan-500/5 border-y border-cyan-500/20 backdrop-blur-sm">
+                        <div className="col-span-2 lg:col-span-4 flex items-center gap-2 text-cyan-400 font-bold font-mono text-sm tracking-wider uppercase mb-2">
                             <Cpu size={16} />
                             台灣權值
                         </div>
@@ -392,8 +392,8 @@ export function DashboardClient({ initialData, initialStats, lastUpdatedStr }: D
                     transition={{ delay: 0.05 }}
                     className="max-w-7xl mx-auto mb-6 px-4 md:px-0"
                 >
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3 p-4 border-y border-purple-500/20 backdrop-blur-sm">
-                        <div className="col-span-2 md:col-span-4 flex items-center gap-2 text-purple-400 font-bold font-mono text-sm tracking-wider uppercase mb-2">
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3 p-4 border-y border-cyan-500/20 backdrop-blur-sm">
+                        <div className="col-span-2 md:col-span-4 flex items-center gap-2 text-cyan-400 font-bold font-mono text-sm tracking-wider uppercase mb-2">
                             <TrendingUp size={16} />
                             主要股市指數
                         </div>
@@ -587,12 +587,12 @@ function IndexItem({ label, data, loading, url }: { label: string, data?: Market
 
     const isUp = data.changePercent >= 0;
     const colorClass = isUp ? 'text-red-400' : 'text-green-400';
-    // Cold light purple style as requested
-    const bgClass = 'bg-slate-950 border-purple-500/20 shadow-[0_0_15px_rgba(168,85,247,0.1)]';
+    // Cold light cyan style as requested
+    const bgClass = 'bg-slate-950 border-cyan-500/20 shadow-[0_0_15px_rgba(6,182,212,0.1)]';
 
     const content = (
         <div className={cn("flex flex-col items-center justify-center p-3 rounded-xl border backdrop-blur-sm transition-all hover:bg-opacity-80 hover:scale-[1.02]", bgClass)}>
-            <span className="text-sm font-bold text-purple-300/80 tracking-wider mb-1 uppercase">{label}</span>
+            <span className="text-sm font-bold text-cyan-300/80 tracking-wider mb-1 uppercase">{label}</span>
             <div className="flex items-baseline gap-2">
                 {/* Font size reduced by ~40% (text-lg -> text-sm/base) */}
                 <span className="text-sm font-bold font-mono text-slate-100 drop-shadow-sm">
@@ -630,7 +630,7 @@ function MacroItem({ label, value, changePercent, loading, url }: { label: strin
 
     const content = (
         <div className="flex flex-col items-center justify-center p-3 rounded-lg border border-cyan-500/20 bg-slate-900/40 hover:bg-slate-800/60 hover:border-cyan-500/40 transition-all group w-full h-full">
-            <span className="text-sm font-bold font-mono text-purple-400 uppercase tracking-tighter mb-1.5 text-center flex items-center gap-1 drop-shadow-[0_0_3px_rgba(168,85,247,0.5)]">
+            <span className="text-sm font-bold font-mono text-cyan-400 uppercase tracking-tighter mb-1.5 text-center flex items-center gap-1 drop-shadow-[0_0_3px_rgba(6,182,212,0.5)]">
                 {label}
             </span>
             <span className="text-xl font-bold font-mono tracking-tight text-slate-100 group-hover:text-white transition-colors">
