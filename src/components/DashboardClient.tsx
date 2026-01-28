@@ -338,8 +338,15 @@ export function DashboardClient({ initialData, initialStats, lastUpdatedStr }: D
                     <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 p-4 bg-purple-500/5 border-y border-purple-500/20 backdrop-blur-sm">
                         <div className="col-span-2 lg:col-span-4 flex items-center gap-2 text-purple-400 font-bold font-mono text-sm tracking-wider uppercase mb-2">
                             <Cpu size={16} />
-                            Taiwan Tech Leads & AI Supply Chain
+                            台灣權值 (Taiwan Weighted Leaders)
                         </div>
+                        <MacroItem
+                            label="台積電 (2330)"
+                            value={stats?.tsmTw?.price ? `$${stats.tsmTw.price.toFixed(0)}` : '---'}
+                            changePercent={stats?.tsmTw?.changePercent}
+                            loading={loading}
+                            url="https://finance.yahoo.com/quote/2330.TW"
+                        />
                         <MacroItem
                             label="鴻海 (2317)"
                             value={stats?.foxconn?.price ? `$${stats.foxconn.price.toFixed(1)}` : '---'}
@@ -368,6 +375,13 @@ export function DashboardClient({ initialData, initialStats, lastUpdatedStr }: D
                             loading={loading}
                             url="https://finance.yahoo.com/quote/2308.TW"
                         />
+                        <MacroItem
+                            label="富邦金 (2881)"
+                            value={stats?.fubon?.price ? `$${stats.fubon.price.toFixed(1)}` : '---'}
+                            changePercent={stats?.fubon?.changePercent}
+                            loading={loading}
+                            url="https://finance.yahoo.com/quote/2881.TW"
+                        />
                     </div>
                 </motion.div>
 
@@ -378,7 +392,11 @@ export function DashboardClient({ initialData, initialStats, lastUpdatedStr }: D
                     transition={{ delay: 0.05 }}
                     className="max-w-7xl mx-auto mb-6 px-4 md:px-0"
                 >
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3 p-4 bg-purple-500/5 border-y border-purple-500/20 backdrop-blur-sm">
+                        <div className="col-span-2 md:col-span-4 flex items-center gap-2 text-purple-400 font-bold font-mono text-sm tracking-wider uppercase mb-2">
+                            <TrendingUp size={16} />
+                            主要股市指數 (Major Market Indices)
+                        </div>
                         <IndexItem
                             label="費城半導體"
                             data={stats?.sox}
@@ -414,6 +432,18 @@ export function DashboardClient({ initialData, initialStats, lastUpdatedStr }: D
                             data={stats?.otc}
                             loading={loading}
                             url="https://finance.yahoo.com/quote/%5ETWO"
+                        />
+                        <IndexItem
+                            label="日經指數"
+                            data={stats?.nikkei225}
+                            loading={loading}
+                            url="https://finance.yahoo.com/quote/%5EN225"
+                        />
+                        <IndexItem
+                            label="韓國綜合"
+                            data={stats?.kospi}
+                            loading={loading}
+                            url="https://finance.yahoo.com/quote/%5EKS11"
                         />
                     </div>
                 </motion.div>
@@ -562,7 +592,7 @@ function IndexItem({ label, data, loading, url }: { label: string, data?: Market
 
     const content = (
         <div className={cn("flex flex-col items-center justify-center p-3 rounded-xl border backdrop-blur-sm transition-all hover:bg-opacity-80 hover:scale-[1.02]", bgClass)}>
-            <span className="text-[10px] font-bold text-purple-300/80 tracking-wider mb-1 uppercase">{label}</span>
+            <span className="text-sm font-bold text-purple-300/80 tracking-wider mb-1 uppercase">{label}</span>
             <div className="flex items-baseline gap-2">
                 {/* Font size reduced by ~40% (text-lg -> text-sm/base) */}
                 <span className="text-sm font-bold font-mono text-slate-100 drop-shadow-sm">

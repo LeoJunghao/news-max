@@ -45,7 +45,10 @@ export interface MarketStats {
     mediatek: MarketQuote; // 2454
     quanta: MarketQuote; // 2382
     delta: MarketQuote; // 2308
+    fubon: MarketQuote; // 2881
     otc: MarketQuote; // ^TWO
+    nikkei225: MarketQuote; // ^N225
+    kospi: MarketQuote; // ^KS11
 }
 
 // Generic helper to fetch price from Yahoo Finance Chart API
@@ -287,11 +290,14 @@ async function getFoxconn(): Promise<MarketQuote> { return getYahooQuote('2317.T
 async function getMediaTek(): Promise<MarketQuote> { return getYahooQuote('2454.TW'); }
 async function getQuanta(): Promise<MarketQuote> { return getYahooQuote('2382.TW'); }
 async function getDelta(): Promise<MarketQuote> { return getYahooQuote('2308.TW'); }
+async function getFubon(): Promise<MarketQuote> { return getYahooQuote('2881.TW'); }
 async function getOTC(): Promise<MarketQuote> { return getYahooQuote('^TWO'); }
+async function getNikkei225(): Promise<MarketQuote> { return getYahooQuote('^N225'); }
+async function getKOSPI(): Promise<MarketQuote> { return getYahooQuote('^KS11'); }
 
 export async function getMarketStats(): Promise<MarketStats> {
     // Parallel fetch
-    const [vix, cryptoData, us10Y, us2Y, spread, dxy, brent, goldPrice, copper, bitcoin, ethereum, bdi, crb, sox, sp500, dji, nasdaq, twii, usdtwd, usdjpy, tsmAdr, tsmTw, nvda, msft, mu, meta, googl, amd, aapl, foxconn, mediatek, quanta, delta, otc] = await Promise.all([
+    const [vix, cryptoData, us10Y, us2Y, spread, dxy, brent, goldPrice, copper, bitcoin, ethereum, bdi, crb, sox, sp500, dji, nasdaq, twii, usdtwd, usdjpy, tsmAdr, tsmTw, nvda, msft, mu, meta, googl, amd, aapl, foxconn, mediatek, quanta, delta, fubon, otc, nikkei225, kospi] = await Promise.all([
         getVIX(),
         getCryptoFnG(),
         getUS10Y(),
@@ -325,7 +331,10 @@ export async function getMarketStats(): Promise<MarketStats> {
         getMediaTek(),
         getQuanta(),
         getDelta(),
-        getOTC()
+        getFubon(),
+        getOTC(),
+        getNikkei225(),
+        getKOSPI()
     ]);
 
     // Dependent stats
@@ -370,6 +379,9 @@ export async function getMarketStats(): Promise<MarketStats> {
         mediatek,
         quanta,
         delta,
-        otc
+        fubon,
+        otc,
+        nikkei225,
+        kospi
     };
 }

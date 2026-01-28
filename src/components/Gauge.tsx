@@ -57,7 +57,7 @@ export function Gauge({ value, min = 0, max = 100, label, unit = "", loading = f
                     <div className="absolute bottom-0 left-0 w-2 h-2 border-b border-l border-yellow-500/30 rounded-bl-sm" />
                     <div className="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-yellow-500/30 rounded-br-sm" />
 
-                    <h3 className="text-[10px] font-bold font-mono text-purple-400 uppercase tracking-tighter mb-1 text-center h-3 flex items-center drop-shadow-[0_0_3px_rgba(168,85,247,0.5)]">
+                    <h3 className="text-sm font-bold font-mono text-purple-400 uppercase tracking-tighter mb-1 text-center h-3 flex items-center drop-shadow-[0_0_3px_rgba(168,85,247,0.5)]">
                         {label}
                     </h3>
 
@@ -121,7 +121,7 @@ export function Gauge({ value, min = 0, max = 100, label, unit = "", loading = f
             <div className="absolute bottom-0 left-0 w-2 h-2 border-b border-l border-yellow-500/30 rounded-bl-sm" />
             <div className="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-yellow-500/30 rounded-br-sm" />
 
-            <h3 className="text-[10px] font-bold font-mono text-purple-400 uppercase tracking-tighter mb-1 text-center h-3 flex items-center drop-shadow-[0_0_3px_rgba(168,85,247,0.5)]">
+            <h3 className="text-sm font-bold font-mono text-purple-400 uppercase tracking-tighter mb-1 text-center h-3 flex items-center drop-shadow-[0_0_3px_rgba(168,85,247,0.5)]">
                 {label}
             </h3>
 
