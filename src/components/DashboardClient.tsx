@@ -572,20 +572,54 @@ export function DashboardClient({ initialData, initialStats, lastUpdatedStr }: D
                             </div>
 
                             <div className="prose prose-invert max-w-none">
-                                <p className="text-slate-300 leading-8 text-justify font-sans text-sm tracking-wide whitespace-pre-line">
-                                    {(() => {
-                                        if (generatingSummary) return (
-                                            <span className="flex items-center gap-2 animate-pulse text-cyan-400">
-                                                <Cpu className="animate-spin" size={16} />
+                                {(() => {
+                                    if (generatingSummary) return (
+                                        <div className="flex items-center justify-center p-8">
+                                            <span className="flex items-center gap-3 animate-pulse text-cyan-400 text-lg">
+                                                <Cpu className="animate-spin" size={24} />
                                                 AI 正在即時分析全球市場數據，請稍候...
                                             </span>
-                                        );
+                                        </div>
+                                    );
 
-                                        if (!aiSummary) return "請點擊重新整理以生成最新分析報告。";
+                                    if (!aiSummary) return (
+                                        <p className="text-slate-400 text-center italic">
+                                            請點擊 <span className="text-cyan-400 not-italic">REFRESH</span> 按鈕以生成最新分析報告。
+                                        </p>
+                                    );
 
-                                        return aiSummary;
-                                    })()}
-                                </p>
+                                    // Simple formatter to highlight numbers and keywords
+                                    return (
+                                        <div className="space-y-4 text-base leading-relaxed tracking-wide text-slate-200">
+                                            {aiSummary.split('\n').map((line, i) => {
+                                                if (!line.trim()) return <br key={i} />;
+
+                                                // Check for headers (simple check for lines ending with colon or short lines)
+                                                const isHeader = line.length < 20 && (line.endsWith(':') || line.endsWith('：'));
+                                                if (isHeader) {
+                                                    return <h3 key={i} className="text-cyan-300 font-bold text-lg mt-4 mb-2 border-l-4 border-cyan-500 pl-3">{line}</h3>;
+                                                }
+
+                                                // Highlight numbers and percentages
+                                                const parts = line.split(/([$–-]?\d{1,3}(?:,\d{3})*(?:\.\d+)?%?)/g);
+
+                                                return (
+                                                    <p key={i} className="text-justify">
+                                                        {parts.map((part, j) => {
+                                                            // Check if part is a number/percentage
+                                                            if (/^[$–-]?\d{1,3}(?:,\d{3})*(?:\.\d+)?%?$/.test(part)) {
+                                                                // Color logic based on value direction if possible? 
+                                                                // For now just gold/yellow for data points to stand out against cold background
+                                                                return <span key={j} className="text-amber-400 font-mono font-bold mx-0.5">{part}</span>;
+                                                            }
+                                                            return part;
+                                                        })}
+                                                    </p>
+                                                );
+                                            })}
+                                        </div>
+                                    );
+                                })()}
                             </div>
 
                             <div className="mt-6 flex items-center justify-end gap-2 border-t border-slate-800/50 pt-4">
