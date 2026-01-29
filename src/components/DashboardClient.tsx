@@ -191,7 +191,7 @@ export function DashboardClient({ initialData, initialStats, lastUpdatedStr }: D
                             url="https://finance.yahoo.com/quote/YM=F"
                         />
                         <IndexItem
-                            label="台指期近一"
+                            label="台指期"
                             data={stats?.tx}
                             loading={loading}
                             url="https://finance.yahoo.com/quote/WTX=F"
@@ -212,7 +212,7 @@ export function DashboardClient({ initialData, initialStats, lastUpdatedStr }: D
                             主要股市指數
                         </div>
                         <IndexItem
-                            label="費城半導體"
+                            label="費半指數"
                             data={stats?.sox}
                             loading={loading}
                             url="https://finance.yahoo.com/quote/%5ESOX"
@@ -531,6 +531,71 @@ export function DashboardClient({ initialData, initialStats, lastUpdatedStr }: D
                     </div>
                 </motion.div>
 
+                {/* Total Summary Report */}
+                <motion.div
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    viewport={{ once: true }}
+                    className="max-w-7xl mx-auto mb-8 px-4 md:px-0"
+                >
+                    <div className="glass-panel p-6 rounded-2xl border border-cyan-500/30 bg-gradient-to-b from-slate-900/90 to-slate-950/90 shadow-[0_0_30px_rgba(6,182,212,0.15)] relative overflow-hidden group">
+                        <div className="absolute top-0 right-0 w-64 h-64 bg-cyan-500/10 rounded-full blur-3xl -translate-y-32 translate-x-32 group-hover:bg-cyan-500/20 transition-all duration-1000" />
+                        <div className="absolute bottom-0 left-0 w-40 h-40 bg-blue-500/10 rounded-full blur-2xl translate-y-20 -translate-x-20" />
+
+                        <div className="relative z-10">
+                            <div className="flex items-center justify-between mb-6">
+                                <div className="flex items-center gap-3">
+                                    <TrendingUp className="text-cyan-400" size={24} />
+                                    <h2 className="text-xl font-bold text-slate-100 tracking-wide">
+                                        分析報告
+                                    </h2>
+                                </div>
+                                {(() => {
+                                    const score = stats?.stockFnG ?? 50;
+                                    let sentiment = "中性觀望";
+                                    let sentimentColor = "bg-yellow-500/20 text-yellow-300 border-yellow-500/30";
+
+                                    if (score >= 60) {
+                                        sentiment = "樂觀偏多";
+                                        sentimentColor = "bg-red-500/20 text-red-300 border-red-500/30";
+                                    } else if (score <= 40) {
+                                        sentiment = "悲觀保守";
+                                        sentimentColor = "bg-green-500/20 text-green-300 border-green-500/30";
+                                    }
+
+                                    return (
+                                        <div className={cn("px-4 py-1.5 rounded-full border text-sm font-bold tracking-wider shadow-[0_0_15px_rgba(0,0,0,0.3)] backdrop-blur-md", sentimentColor)}>
+                                            {sentiment}
+                                        </div>
+                                    );
+                                })()}
+                            </div>
+
+                            <div className="prose prose-invert max-w-none">
+                                <p className="text-slate-300 leading-8 text-justify font-sans text-sm tracking-wide whitespace-pre-line">
+                                    {(() => {
+                                        if (generatingSummary) return (
+                                            <span className="flex items-center gap-2 animate-pulse text-cyan-400">
+                                                <Cpu className="animate-spin" size={16} />
+                                                AI 正在即時分析全球市場數據，請稍候...
+                                            </span>
+                                        );
+
+                                        if (!aiSummary) return "請點擊重新整理以生成最新分析報告。";
+
+                                        return aiSummary;
+                                    })()}
+                                </p>
+                            </div>
+
+                            <div className="mt-6 flex items-center justify-end gap-2 border-t border-slate-800/50 pt-4">
+                                <span className="text-xs text-slate-500 font-mono">AI Generated Analysis • Comprehensive Report</span>
+                                <Cpu size={14} className="text-cyan-500/50" />
+                            </div>
+                        </div>
+                    </div>
+                </motion.div>
+
                 {/* Main Content */}
                 <div className="max-w-7xl mx-auto space-y-8 pb-12">
                     <section id="us">
@@ -548,71 +613,6 @@ export function DashboardClient({ initialData, initialStats, lastUpdatedStr }: D
                     <section id="crypto">
                         <NewsSection title="加密貨幣快訊" items={data.crypto} color="emerald" />
                     </section>
-
-                    {/* Total Summary Report */}
-                    <motion.div
-                        initial={{ opacity: 0, scale: 0.95 }}
-                        whileInView={{ opacity: 1, scale: 1 }}
-                        viewport={{ once: true }}
-                        className="mt-12 mb-8 mx-4 md:mx-0"
-                    >
-                        <div className="glass-panel p-6 rounded-2xl border border-cyan-500/30 bg-gradient-to-b from-slate-900/90 to-slate-950/90 shadow-[0_0_30px_rgba(6,182,212,0.15)] relative overflow-hidden group">
-                            <div className="absolute top-0 right-0 w-64 h-64 bg-cyan-500/10 rounded-full blur-3xl -translate-y-32 translate-x-32 group-hover:bg-cyan-500/20 transition-all duration-1000" />
-                            <div className="absolute bottom-0 left-0 w-40 h-40 bg-blue-500/10 rounded-full blur-2xl translate-y-20 -translate-x-20" />
-
-                            <div className="relative z-10">
-                                <div className="flex items-center justify-between mb-6">
-                                    <div className="flex items-center gap-3">
-                                        <TrendingUp className="text-cyan-400" size={24} />
-                                        <h2 className="text-xl font-bold text-slate-100 tracking-wide">
-                                            市場總結分析報告
-                                        </h2>
-                                    </div>
-                                    {(() => {
-                                        const score = stats?.stockFnG ?? 50;
-                                        let sentiment = "中性觀望";
-                                        let sentimentColor = "bg-yellow-500/20 text-yellow-300 border-yellow-500/30";
-
-                                        if (score >= 60) {
-                                            sentiment = "樂觀偏多";
-                                            sentimentColor = "bg-red-500/20 text-red-300 border-red-500/30";
-                                        } else if (score <= 40) {
-                                            sentiment = "悲觀保守";
-                                            sentimentColor = "bg-green-500/20 text-green-300 border-green-500/30";
-                                        }
-
-                                        return (
-                                            <div className={cn("px-4 py-1.5 rounded-full border text-sm font-bold tracking-wider shadow-[0_0_15px_rgba(0,0,0,0.3)] backdrop-blur-md", sentimentColor)}>
-                                                {sentiment}
-                                            </div>
-                                        );
-                                    })()}
-                                </div>
-
-                                <div className="prose prose-invert max-w-none">
-                                    <p className="text-slate-300 leading-8 text-justify font-sans text-sm tracking-wide whitespace-pre-line">
-                                        {(() => {
-                                            if (generatingSummary) return (
-                                                <span className="flex items-center gap-2 animate-pulse text-cyan-400">
-                                                    <Cpu className="animate-spin" size={16} />
-                                                    AI 正在即時分析全球市場數據，請稍候...
-                                                </span>
-                                            );
-
-                                            if (!aiSummary) return "請點擊重新整理以生成最新分析報告。";
-
-                                            return aiSummary;
-                                        })()}
-                                    </p>
-                                </div>
-
-                                <div className="mt-6 flex items-center justify-end gap-2 border-t border-slate-800/50 pt-4">
-                                    <span className="text-xs text-slate-500 font-mono">AI Generated Analysis • Comprehensive Report</span>
-                                    <Cpu size={14} className="text-cyan-500/50" />
-                                </div>
-                            </div>
-                        </div>
-                    </motion.div>
 
                     <div className="text-center text-slate-600 text-sm font-mono mt-10 pt-10 border-t border-slate-800">
                         Sources: CNN, CNBC, Anue, Yahoo Finance, WSJ, Google News • Priority &lt; 12h • Excludes {'>'} 24h
