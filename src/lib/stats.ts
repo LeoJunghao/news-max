@@ -25,9 +25,12 @@ export interface MarketStats {
     // Major Indices
     sox: MarketQuote;
     sp500: MarketQuote;
+    sp500Index: MarketQuote; // New: ^GSPC
     dji: MarketQuote;
-    nasdaq: MarketQuote; // New
+    nasdaq: MarketQuote;
+    nasdaqComposite: MarketQuote; // New: ^IXIC
     twii: MarketQuote;
+    tx: MarketQuote; // New: Taiwan Futures
     // New Pro Stats
     usdtwd: MarketQuote;
     usdjpy: MarketQuote; // New
@@ -164,19 +167,20 @@ async function getBDI(): Promise<MarketQuote> {
 
 // New: CRB Index (^TRCCRB - Thomson Reuters / CoreCommodity CRB Index)
 async function getCRB(): Promise<MarketQuote> {
-    // Yahoo often uses ^TRCCRB or similar. Let's try ^TRCCRB.
-    // Sometimes it's CL=F for oil, but CRB index itself is specific.
     return getYahooQuote('^TRCCRB');
 }
 
-// Indices Fetchers (Switched to Futures for 24h Coverage)
-async function getSOX(): Promise<MarketQuote> { return getYahooQuote('%5ESOX'); } // SOX has no liquid 24h future, keeping Index
+// Indices Fetchers
+async function getSOX(): Promise<MarketQuote> { return getYahooQuote('%5ESOX'); }
 async function getSP500(): Promise<MarketQuote> { return getYahooQuote('ES=F'); } // S&P 500 Futures
-async function getDJI(): Promise<MarketQuote> { return getYahooQuote('YM=F'); }   // Dow Futures
-async function getNasdaq(): Promise<MarketQuote> { return getYahooQuote('NQ=F'); } // Nasdaq 100 Futures (New)
+async function getSP500Index(): Promise<MarketQuote> { return getYahooQuote('%5EGSPC'); } // S&P 500 Index
+async function getDJI(): Promise<MarketQuote> { return getYahooQuote('YM=F'); }
+async function getNasdaq(): Promise<MarketQuote> { return getYahooQuote('NQ=F'); } // Nasdaq 100 Futures
+async function getNasdaqComposite(): Promise<MarketQuote> { return getYahooQuote('%5EIXIC'); } // Nasdaq Composite
 async function getTWII(): Promise<MarketQuote> { return getYahooQuote('%5ETWII'); }
+async function getTX(): Promise<MarketQuote> { return getYahooQuote('WTX=F'); } // Taiwan Index Futures
 
-// 2. Crypto Fear & Greed from Alternative.me
+// 2. Crypto Fear & Greed
 async function getCryptoFnG(): Promise<number> {
     try {
         const res = await fetch('https://api.alternative.me/fng/?limit=1', { next: { revalidate: 3600 } });
@@ -198,30 +202,23 @@ async function getStockFnG(currentVIX: number): Promise<number> {
         if (res.ok) {
             const data = await res.json();
             const today = data.fear_and_greed?.score;
-            // User requested 2 decimal places, so valid float is needed.
             if (today !== undefined) return Number(today);
         }
     } catch (e) {
-        // Silently fail to fallback
     }
-
-    // Fallback: VIX Proxy
     let proxy = 110 - (3 * currentVIX);
     return Math.max(0, Math.min(100, proxy));
 }
 
-// 4. MM Gold Sentiment (Proxy: Gold Trend)
+// 4. MM Gold Sentiment
 async function getGoldSentiment(): Promise<number> {
     try {
-        // GC=F
         const res = await fetch('https://query1.finance.yahoo.com/v8/finance/chart/GC=F?interval=1d&range=5d', { next: { revalidate: 3600 } });
         const data = await res.json();
         const meta = data.chart?.result?.[0]?.meta;
         const price = meta?.regularMarketPrice;
         const prevClose = meta?.chartPreviousClose;
-
         if (!price || !prevClose) return 50;
-
         const changePercent = ((price - prevClose) / prevClose) * 100;
         let sentiment = 50 + (changePercent * 10);
         return Math.max(10, Math.min(90, sentiment));
@@ -231,60 +228,17 @@ async function getGoldSentiment(): Promise<number> {
 }
 
 // New: USD/TWD (TWD=X)
-async function getUSDTWD(): Promise<MarketQuote> {
-    return getYahooQuote('TWD=X');
-}
-
-// New: USD/JPY (JPY=X)
-async function getUSDJPY(): Promise<MarketQuote> {
-    return getYahooQuote('JPY=X');
-}
-
-// New: TSMC ADR (TSM)
-async function getTSMADR(): Promise<MarketQuote> {
-    return getYahooQuote('TSM');
-}
-
-// New: TSMC TWSE (2330.TW)
-async function getTSMTW(): Promise<MarketQuote> {
-    return getYahooQuote('2330.TW');
-}
-
-// New: NVIDIA (NVDA)
-async function getNVDA(): Promise<MarketQuote> {
-    return getYahooQuote('NVDA');
-}
-
-// New: Microsoft (MSFT)
-async function getMSFT(): Promise<MarketQuote> {
-    return getYahooQuote('MSFT');
-}
-
-// New: Micron (MU)
-async function getMU(): Promise<MarketQuote> {
-    return getYahooQuote('MU');
-}
-
-// New: Meta (META)
-async function getMETA(): Promise<MarketQuote> {
-    return getYahooQuote('META');
-}
-
-// New: Alphabet (GOOGL)
-async function getGOOGL(): Promise<MarketQuote> {
-    return getYahooQuote('GOOGL');
-}
-
-// New: AMD (AMD)
-async function getAMD(): Promise<MarketQuote> {
-    return getYahooQuote('AMD');
-}
-
-// New: Apple (AAPL)
-async function getAAPL(): Promise<MarketQuote> {
-    return getYahooQuote('AAPL');
-}
-
+async function getUSDTWD(): Promise<MarketQuote> { return getYahooQuote('TWD=X'); }
+async function getUSDJPY(): Promise<MarketQuote> { return getYahooQuote('JPY=X'); }
+async function getTSMADR(): Promise<MarketQuote> { return getYahooQuote('TSM'); }
+async function getTSMTW(): Promise<MarketQuote> { return getYahooQuote('2330.TW'); }
+async function getNVDA(): Promise<MarketQuote> { return getYahooQuote('NVDA'); }
+async function getMSFT(): Promise<MarketQuote> { return getYahooQuote('MSFT'); }
+async function getMU(): Promise<MarketQuote> { return getYahooQuote('MU'); }
+async function getMETA(): Promise<MarketQuote> { return getYahooQuote('META'); }
+async function getGOOGL(): Promise<MarketQuote> { return getYahooQuote('GOOGL'); }
+async function getAMD(): Promise<MarketQuote> { return getYahooQuote('AMD'); }
+async function getAAPL(): Promise<MarketQuote> { return getYahooQuote('AAPL'); }
 // Taiwan Tech F4
 async function getFoxconn(): Promise<MarketQuote> { return getYahooQuote('2317.TW'); }
 async function getMediaTek(): Promise<MarketQuote> { return getYahooQuote('2454.TW'); }
@@ -296,8 +250,7 @@ async function getNikkei225(): Promise<MarketQuote> { return getYahooQuote('^N22
 async function getKOSPI(): Promise<MarketQuote> { return getYahooQuote('^KS11'); }
 
 export async function getMarketStats(): Promise<MarketStats> {
-    // Parallel fetch
-    const [vix, cryptoData, us10Y, us2Y, spread, dxy, brent, goldPrice, copper, bitcoin, ethereum, bdi, crb, sox, sp500, dji, nasdaq, twii, usdtwd, usdjpy, tsmAdr, tsmTw, nvda, msft, mu, meta, googl, amd, aapl, foxconn, mediatek, quanta, delta, fubon, otc, nikkei225, kospi] = await Promise.all([
+    const [vix, cryptoData, us10Y, us2Y, spread, dxy, brent, goldPrice, copper, bitcoin, ethereum, bdi, crb, sox, sp500, sp500Index, dji, nasdaq, nasdaqComposite, twii, tx, usdtwd, usdjpy, tsmAdr, tsmTw, nvda, msft, mu, meta, googl, amd, aapl, foxconn, mediatek, quanta, delta, fubon, otc, nikkei225, kospi] = await Promise.all([
         getVIX(),
         getCryptoFnG(),
         getUS10Y(),
@@ -313,9 +266,12 @@ export async function getMarketStats(): Promise<MarketStats> {
         getCRB(),
         getSOX(),
         getSP500(),
+        getSP500Index(),
         getDJI(),
         getNasdaq(),
+        getNasdaqComposite(),
         getTWII(),
+        getTX(),
         getUSDTWD(),
         getUSDJPY(),
         getTSMADR(),
@@ -337,7 +293,6 @@ export async function getMarketStats(): Promise<MarketStats> {
         getKOSPI()
     ]);
 
-    // Dependent stats
     const [stockData, goldData] = await Promise.all([
         getStockFnG(vix),
         getGoldSentiment()
@@ -361,9 +316,12 @@ export async function getMarketStats(): Promise<MarketStats> {
         crb,
         sox,
         sp500,
+        sp500Index,
         dji,
         nasdaq,
+        nasdaqComposite,
         twii,
+        tx,
         usdtwd,
         usdjpy,
         tsmAdr,

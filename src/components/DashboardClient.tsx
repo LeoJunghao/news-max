@@ -160,6 +160,39 @@ export function DashboardClient({ initialData, initialStats, lastUpdatedStr }: D
             </header>
 
             <main className="p-4 md:p-8">
+                {/* Futures Section */}
+                <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.05 }}
+                    className="max-w-7xl mx-auto mb-6 px-4 md:px-0"
+                >
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3 p-4 border-y border-cyan-500/20 backdrop-blur-sm bg-cyan-950/10">
+                        <div className="col-span-2 md:col-span-4 flex items-center gap-2 text-cyan-400 font-bold font-mono text-sm tracking-wider uppercase mb-2">
+                            <Zap size={16} />
+                            期貨指數
+                        </div>
+                        <IndexItem
+                            label="標普500期貨"
+                            data={stats?.sp500}
+                            loading={loading}
+                            url="https://finance.yahoo.com/quote/ES=F"
+                        />
+                        <IndexItem
+                            label="那斯達克100期"
+                            data={stats?.nasdaq}
+                            loading={loading}
+                            url="https://finance.yahoo.com/quote/NQ=F"
+                        />
+                        <IndexItem
+                            label="台指期近一"
+                            data={stats?.tx}
+                            loading={loading}
+                            url="https://finance.yahoo.com/quote/WTX=F"
+                        />
+                    </div>
+                </motion.div>
+
                 {/* Major Indices Section */}
                 <motion.div
                     initial={{ opacity: 0, y: -10 }}
@@ -179,16 +212,16 @@ export function DashboardClient({ initialData, initialStats, lastUpdatedStr }: D
                             url="https://finance.yahoo.com/quote/%5ESOX"
                         />
                         <IndexItem
-                            label="標普500期貨"
-                            data={stats?.sp500}
+                            label="S&P 500"
+                            data={stats?.sp500Index}
                             loading={loading}
-                            url="https://finance.yahoo.com/quote/ES=F"
+                            url="https://finance.yahoo.com/quote/%5EGSPC"
                         />
                         <IndexItem
-                            label="那斯達克100期"
-                            data={stats?.nasdaq}
+                            label="NASDAQ Composite"
+                            data={stats?.nasdaqComposite}
                             loading={loading}
-                            url="https://finance.yahoo.com/quote/NQ=F"
+                            url="https://finance.yahoo.com/quote/%5EIXIC"
                         />
                         <IndexItem
                             label="道瓊工業"
