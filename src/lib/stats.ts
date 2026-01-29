@@ -178,7 +178,37 @@ async function getDJI(): Promise<MarketQuote> { return getYahooQuote('YM=F'); }
 async function getNasdaq(): Promise<MarketQuote> { return getYahooQuote('NQ=F'); } // Nasdaq 100 Futures
 async function getNasdaqComposite(): Promise<MarketQuote> { return getYahooQuote('%5EIXIC'); } // Nasdaq Composite
 async function getTWII(): Promise<MarketQuote> { return getYahooQuote('%5ETWII'); }
-async function getTX(): Promise<MarketQuote> { return getYahooQuote('WTX=F'); } // Taiwan Index Futures
+async function getTX(): Promise<MarketQuote> {
+    try {
+        const res = await fetch('https://tw.stock.yahoo.com/future/WTX&', {
+            next: { revalidate: 60 },
+            headers: {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+            }
+        });
+        if (!res.ok) return { price: 0, changePercent: 0 };
+        const text = await res.text();
+
+        // Price regex: class="Fz(32px)...">32,577.00</span>
+        const priceMatch = text.match(/class="Fz\(32px\)[^>]*>([0-9,]+\.?[0-9]*)<\/span>/);
+        const price = priceMatch ? parseFloat(priceMatch[1].replace(/,/g, '')) : 0;
+
+        // Change percent regex: The structure is usually Price -> Change -> ChangePercent
+        // Finding the first % after the price might work
+        // Yahoo TW format: <span class="...">-148.00</span> ... <span class="...">-0.45%</span>
+        // Let's look for the first % pattern after the price match, or just scan for signatures
+        const pctMatch = text.match(/>([+\-]?[0-9,]+\.?[0-9]*)%<\/span>/);
+        let changePercent = 0;
+        if (pctMatch) {
+            changePercent = parseFloat(pctMatch[1].replace(/,/g, ''));
+        }
+
+        return { price, changePercent };
+    } catch (e) {
+        console.error('TX Scrape Error', e);
+        return { price: 0, changePercent: 0 };
+    }
+}
 
 // 2. Crypto Fear & Greed
 async function getCryptoFnG(): Promise<number> {

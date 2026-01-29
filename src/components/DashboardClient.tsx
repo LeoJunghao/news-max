@@ -218,7 +218,7 @@ export function DashboardClient({ initialData, initialStats, lastUpdatedStr }: D
                             url="https://finance.yahoo.com/quote/%5EGSPC"
                         />
                         <IndexItem
-                            label="NASDAQ Composite"
+                            label="納斯達克"
                             data={stats?.nasdaqComposite}
                             loading={loading}
                             url="https://finance.yahoo.com/quote/%5EIXIC"
