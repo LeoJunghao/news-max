@@ -166,14 +166,26 @@ export function DashboardClient({ initialData, initialStats, lastUpdatedStr }: D
                     animate={{ opacity: 1, y: 0 }}
                     className="max-w-7xl mx-auto mb-6 px-4 md:px-0"
                 >
+                    <div className="flex items-center gap-3 mb-3 px-2">
+                        <div className="w-1 h-5 bg-cyan-500 shadow-[0_0_10px_rgba(6,182,212,0.5)] rounded-full" />
+                        <h2 className="text-lg font-bold text-slate-100 tracking-wide">
+                            【財經數據】
+                        </h2>
+                    </div>
                     <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 p-4 bg-emerald-500/5 border-y border-emerald-500/20 backdrop-blur-sm">
                         <MacroItem
-                            label="美債利差 10Y-2Y"
-                            value={stats?.spread?.price ? `${stats.spread.price.toFixed(3)}%` : '---'}
-                            // Negative spread is bad (Recession signal), can color code if needed, but here using changePercent is tricky as spread has no changePercent. Let's assume red if negative.
-                            changePercent={undefined}
+                            label="美2年債"
+                            value={stats?.us2Y?.price ? `${stats.us2Y.price.toFixed(2)}%` : '---'}
+                            changePercent={stats?.us2Y?.changePercent}
                             loading={loading}
-                            url="https://www.cnbc.com/quotes/10Y2YS"
+                            url="https://www.cnbc.com/quotes/US2Y"
+                        />
+                        <MacroItem
+                            label="美10年債"
+                            value={stats?.us10Y?.price ? `${stats.us10Y.price.toFixed(2)}%` : '---'}
+                            changePercent={stats?.us10Y?.changePercent}
+                            loading={loading}
+                            url="https://www.cnbc.com/quotes/US10Y"
                         />
                         <MacroItem
                             label="美元兌台幣"
@@ -190,18 +202,18 @@ export function DashboardClient({ initialData, initialStats, lastUpdatedStr }: D
                             url="https://finance.yahoo.com/quote/JPY=X"
                         />
                         <MacroItem
-                            label="美10年債"
-                            value={stats?.us10Y?.price ? `${stats.us10Y.price.toFixed(2)}%` : '---'}
-                            changePercent={stats?.us10Y?.changePercent}
-                            loading={loading}
-                            url="https://www.cnbc.com/quotes/US10Y"
-                        />
-                        <MacroItem
                             label="美元指數"
                             value={stats?.dollarIndex?.price.toFixed(2) || '---'}
                             changePercent={stats?.dollarIndex?.changePercent}
                             loading={loading}
                             url="https://www.cnbc.com/quotes/.DXY"
+                        />
+                        <MacroItem
+                            label="布蘭特原油"
+                            value={`$${stats?.brentCrude?.price.toFixed(2)}`}
+                            changePercent={stats?.brentCrude?.changePercent}
+                            loading={loading}
+                            url="https://finance.yahoo.com/quote/BZ=F"
                         />
                         <MacroItem
                             label="比特幣"
@@ -216,13 +228,6 @@ export function DashboardClient({ initialData, initialStats, lastUpdatedStr }: D
                             changePercent={stats?.ethereum?.changePercent}
                             loading={loading}
                             url="https://finance.yahoo.com/quote/ETH-USD"
-                        />
-                        <MacroItem
-                            label="布蘭特原油"
-                            value={`$${stats?.brentCrude?.price.toFixed(2)}`}
-                            changePercent={stats?.brentCrude?.changePercent}
-                            loading={loading}
-                            url="https://finance.yahoo.com/quote/BZ=F"
                         />
                         <MacroItem
                             label="黃金價格"
