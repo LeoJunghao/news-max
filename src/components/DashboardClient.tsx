@@ -185,6 +185,12 @@ export function DashboardClient({ initialData, initialStats, lastUpdatedStr }: D
                             url="https://finance.yahoo.com/quote/NQ=F"
                         />
                         <IndexItem
+                            label="道瓊期指"
+                            data={stats?.dji}
+                            loading={loading}
+                            url="https://finance.yahoo.com/quote/YM=F"
+                        />
+                        <IndexItem
                             label="台指期近一"
                             data={stats?.tx}
                             loading={loading}
