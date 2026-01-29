@@ -160,6 +160,69 @@ export function DashboardClient({ initialData, initialStats, lastUpdatedStr }: D
             </header>
 
             <main className="p-4 md:p-8">
+                {/* Major Indices Section */}
+                <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.05 }}
+                    className="max-w-7xl mx-auto mb-6 px-4 md:px-0"
+                >
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3 p-4 border-y border-purple-500/20 backdrop-blur-sm">
+                        <div className="col-span-2 md:col-span-4 flex items-center gap-2 text-cyan-400 font-bold font-mono text-sm tracking-wider uppercase mb-2">
+                            <TrendingUp size={16} />
+                            主要股市指數
+                        </div>
+                        <IndexItem
+                            label="費城半導體"
+                            data={stats?.sox}
+                            loading={loading}
+                            url="https://finance.yahoo.com/quote/%5ESOX"
+                        />
+                        <IndexItem
+                            label="標普500期貨"
+                            data={stats?.sp500}
+                            loading={loading}
+                            url="https://finance.yahoo.com/quote/ES=F"
+                        />
+                        <IndexItem
+                            label="那斯達克100期"
+                            data={stats?.nasdaq}
+                            loading={loading}
+                            url="https://finance.yahoo.com/quote/NQ=F"
+                        />
+                        <IndexItem
+                            label="道瓊工業"
+                            data={stats?.dji}
+                            loading={loading}
+                            url="https://finance.yahoo.com/quote/YM=F"
+                        />
+                        <IndexItem
+                            label="台股加權"
+                            data={stats?.twii}
+                            loading={loading}
+                            url="https://finance.yahoo.com/quote/%5ETWII"
+                        />
+                        <IndexItem
+                            label="櫃買指數"
+                            data={stats?.otc}
+                            loading={loading}
+                            url="https://finance.yahoo.com/quote/%5ETWO"
+                        />
+                        <IndexItem
+                            label="日經指數"
+                            data={stats?.nikkei225}
+                            loading={loading}
+                            url="https://finance.yahoo.com/quote/%5EN225"
+                        />
+                        <IndexItem
+                            label="韓國綜合"
+                            data={stats?.kospi}
+                            loading={loading}
+                            url="https://finance.yahoo.com/quote/%5EKS11"
+                        />
+                    </div>
+                </motion.div>
+
                 {/* Macro Pulse Section */}
                 <motion.div
                     initial={{ opacity: 0, y: -10 }}
@@ -390,68 +453,7 @@ export function DashboardClient({ initialData, initialStats, lastUpdatedStr }: D
                     </div>
                 </motion.div>
 
-                {/* Major Indices Section */}
-                <motion.div
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.05 }}
-                    className="max-w-7xl mx-auto mb-6 px-4 md:px-0"
-                >
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3 p-4 border-y border-purple-500/20 backdrop-blur-sm">
-                        <div className="col-span-2 md:col-span-4 flex items-center gap-2 text-cyan-400 font-bold font-mono text-sm tracking-wider uppercase mb-2">
-                            <TrendingUp size={16} />
-                            主要股市指數
-                        </div>
-                        <IndexItem
-                            label="費城半導體"
-                            data={stats?.sox}
-                            loading={loading}
-                            url="https://finance.yahoo.com/quote/%5ESOX"
-                        />
-                        <IndexItem
-                            label="S&P 500"
-                            data={stats?.sp500}
-                            loading={loading}
-                            url="https://finance.yahoo.com/quote/ES=F"
-                        />
-                        <IndexItem
-                            label="Nasdaq"
-                            data={stats?.nasdaq}
-                            loading={loading}
-                            url="https://finance.yahoo.com/quote/NQ=F"
-                        />
-                        <IndexItem
-                            label="道瓊工業"
-                            data={stats?.dji}
-                            loading={loading}
-                            url="https://finance.yahoo.com/quote/YM=F"
-                        />
-                        <IndexItem
-                            label="台股加權"
-                            data={stats?.twii}
-                            loading={loading}
-                            url="https://finance.yahoo.com/quote/%5ETWII"
-                        />
-                        <IndexItem
-                            label="櫃買指數"
-                            data={stats?.otc}
-                            loading={loading}
-                            url="https://finance.yahoo.com/quote/%5ETWO"
-                        />
-                        <IndexItem
-                            label="日經指數"
-                            data={stats?.nikkei225}
-                            loading={loading}
-                            url="https://finance.yahoo.com/quote/%5EN225"
-                        />
-                        <IndexItem
-                            label="韓國綜合"
-                            data={stats?.kospi}
-                            loading={loading}
-                            url="https://finance.yahoo.com/quote/%5EKS11"
-                        />
-                    </div>
-                </motion.div>
+
 
                 {/* Gauges Section */}
                 <motion.div
