@@ -93,16 +93,12 @@ export async function POST(request: Request) {
 
         // Expanded Robust Fallback Strategy
         const modelCandidates = [
-            "gemini-2.0-flash-exp", // Experimental
-            "gemini-1.5-pro-latest",
-            "gemini-1.5-pro-002",
-            "gemini-1.5-flash-002",
-            "gemini-1.5-pro",
-            "gemini-1.5-flash",
-            "gemini-1.5-pro-001",
-            "gemini-1.5-flash-001",
-            "gemini-1.0-pro",
-            "gemini-pro"            // Legacy absolute base
+            "gemini-2.5-pro",       // User's key has access to bleeding edge!
+            "gemini-2.5-flash",
+            "gemini-2.0-flash",     // Very stable and fast
+            "gemini-2.0-flash-001",
+            "gemini-1.5-pro",       // Fallback
+            "gemini-pro"
         ];
 
         let text = "";
