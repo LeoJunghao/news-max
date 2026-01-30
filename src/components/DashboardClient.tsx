@@ -672,14 +672,14 @@ function IndexItem({ label, data, loading, url }: { label: string, data?: Market
 
     const content = (
         <div className={cn("flex flex-col items-center justify-center p-3 rounded-xl border backdrop-blur-sm transition-all hover:bg-opacity-80 hover:scale-[1.02]", bgClass)}>
-            <span className="text-base font-bold text-purple-300/80 tracking-wider mb-1 uppercase">{label}</span>
+            <span className="text-lg font-bold font-mono text-purple-300/95 tracking-wider mb-1 uppercase">{label}</span>
             <div className="flex items-baseline gap-2">
                 {/* Font size reduced by ~40% (text-lg -> text-sm/base) */}
                 <span className="text-sm font-bold font-mono text-slate-100 drop-shadow-sm">
                     {data.price.toLocaleString(undefined, { maximumFractionDigits: 2 })}
                 </span>
                 {/* Font size reduced (text-xs -> text-[10px]) */}
-                <span className={cn("text-[10px] font-mono font-bold flex items-center", colorClass)}>
+                <span className={cn("text-sm font-mono font-bold flex items-center", colorClass)}>
                     {isUp ? '▲' : '▼'} {Math.abs(data.changePercent).toFixed(2)}%
                 </span>
             </div>
@@ -710,14 +710,14 @@ function MacroItem({ label, value, changePercent, loading, url }: { label: strin
 
     const content = (
         <div className="flex flex-col items-center justify-center p-3 rounded-lg border border-purple-500/20 bg-slate-900/40 hover:bg-slate-800/60 hover:border-purple-500/40 transition-all group w-full h-full">
-            <span className="text-base font-bold font-mono text-purple-400 uppercase tracking-tighter mb-1.5 text-center flex items-center gap-1 drop-shadow-[0_0_3px_rgba(168,85,247,0.5)]">
+            <span className="text-lg font-bold font-mono text-purple-300/95 uppercase tracking-wider mb-1 text-center flex items-center gap-1 drop-shadow-[0_0_3px_rgba(168,85,247,0.5)]">
                 {label}
             </span>
             <span className="text-xl font-bold font-mono tracking-tight text-slate-100 group-hover:text-white transition-colors">
                 {value}
             </span>
             {changePercent !== undefined && (
-                <span className={cn("text-[10px] font-bold font-mono mt-0.5", trendColor)}>
+                <span className={cn("text-sm font-bold font-mono mt-0.5", trendColor)}>
                     {isUp ? '▲' : '▼'} {Math.abs(changePercent).toFixed(2)}%
                 </span>
             )}
