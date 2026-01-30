@@ -90,13 +90,38 @@ export async function POST(request: Request) {
 
         // Initialize Gemini
         const genAI = new GoogleGenerativeAI(apiKey);
-        // Switching to 'gemini-1.5-flash' as 1.5-pro appears unavailable for this API key
-        // 1.5 Flash is highly capable and supports the latest features
-        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
-        const result = await model.generateContent(prompt);
-        const response = await result.response;
-        const text = response.text();
+        // Robust fallback strategy: Try latest models first, fallback to older ones if 404/API issues occur
+        const modelCandidates = [
+            "gemini-1.5-pro",
+            "gemini-1.5-flash",
+            "gemini-1.0-pro",
+            "gemini-pro"
+        ];
+
+        let text = "";
+        let lastError = null;
+
+        for (const modelName of modelCandidates) {
+            try {
+                console.log(`Attempting to generate summary with model: ${modelName}`);
+                const model = genAI.getGenerativeModel({ model: modelName });
+                const result = await model.generateContent(prompt);
+                const response = await result.response;
+                text = response.text();
+
+                if (text) break; // Success
+            } catch (e: any) {
+                console.warn(`Model ${modelName} failed:`, e.message);
+                lastError = e;
+                // If it's a content blocking error, we might want to stop? 
+                // But for 404/Quota issues, we continue to next candidate.
+            }
+        }
+
+        if (!text) {
+            throw lastError || new Error("All model candidates failed to generate content.");
+        }
 
         return NextResponse.json({ summary: text });
 
