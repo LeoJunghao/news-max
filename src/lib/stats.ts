@@ -180,27 +180,23 @@ async function getNasdaqComposite(): Promise<MarketQuote> { return getYahooQuote
 async function getTWII(): Promise<MarketQuote> { return getYahooQuote('%5ETWII'); }
 async function getTX(): Promise<MarketQuote> {
     try {
-        const res = await fetch('https://tw.stock.yahoo.com/future/WTX&', {
-            next: { revalidate: 60 },
-            headers: {
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
-            }
-        });
+        const res = await fetch('https://tw.stock.yahoo.com/future/WTX&', { next: { revalidate: 30 } });
         if (!res.ok) return { price: 0, changePercent: 0 };
-        const text = await res.text();
 
+        const text = await res.text();
         // Price regex: class="Fz(32px)...">32,577.00</span>
         const priceMatch = text.match(/class="Fz\(32px\)[^>]*>([0-9,]+\.?[0-9]*)<\/span>/);
         const price = priceMatch ? parseFloat(priceMatch[1].replace(/,/g, '')) : 0;
 
-        // Change percent regex: The structure is usually Price -> Change -> ChangePercent
-        // Finding the first % after the price might work
-        // Yahoo TW format: <span class="...">-148.00</span> ... <span class="...">-0.45%</span>
-        // Let's look for the first % pattern after the price match, or just scan for signatures
-        const pctMatch = text.match(/>([+\-]?[0-9,]+\.?[0-9]*)%<\/span>/);
+        // Extract first percentage found after price
+        // Usually >-0.45%</span>
         let changePercent = 0;
-        if (pctMatch) {
-            changePercent = parseFloat(pctMatch[1].replace(/,/g, ''));
+        if (priceMatch) {
+            const afterPrice = text.substring(priceMatch.index! + priceMatch[0].length, priceMatch.index! + priceMatch[0].length + 1000);
+            const pctMatch = afterPrice.match(/>([+\-]?[0-9,]+\.?[0-9]*)%<\/span>/);
+            if (pctMatch) {
+                changePercent = parseFloat(pctMatch[1].replace(/,/g, ''));
+            }
         }
 
         return { price, changePercent };
@@ -240,8 +236,40 @@ async function getStockFnG(currentVIX: number): Promise<number> {
     return Math.max(0, Math.min(100, proxy));
 }
 
-// 4. MM Gold Sentiment
+// 4. JM Bullion Gold Fear & Greed (Scraping Fallback)
 async function getGoldSentiment(): Promise<number> {
+    try {
+        const res = await fetch('https://www.jmbullion.com/gold-fear-greed-index/', {
+            headers: {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+            },
+            next: { revalidate: 3600 }
+        });
+
+        if (res.ok) {
+            const html = await res.text();
+            // Heuristic to find the index number in HTML
+            // Look for "Current Index" followed by a number
+            // or specific container classes if they exist in future
+
+            // Standard regex for finding the score
+            // Usually appears as a raw number or within a tag
+            // JM Bullion specific: often in a gauge container
+
+            const regex = /Current Index.*?(\d+)/i;
+            const match = html.match(regex);
+
+            // Also try finding "fng-score" class if structure updates
+            const classMatch = html.match(/class="[^"]*fng-score[^"]*"[^>]*>(\d+)/i);
+
+            if (match) return parseInt(match[1]);
+            if (classMatch) return parseInt(classMatch[1]);
+        }
+    } catch (e) {
+        console.error("JM Bullion Fetch Error", e);
+    }
+
+    // FALLBACK: Use algorithm based on Gold Price volatility if scraping fails
     try {
         const res = await fetch('https://query1.finance.yahoo.com/v8/finance/chart/GC=F?interval=1d&range=5d', { next: { revalidate: 3600 } });
         const data = await res.json();
@@ -250,7 +278,8 @@ async function getGoldSentiment(): Promise<number> {
         const prevClose = meta?.chartPreviousClose;
         if (!price || !prevClose) return 50;
         const changePercent = ((price - prevClose) / prevClose) * 100;
-        let sentiment = 50 + (changePercent * 10);
+        // Map -2% to +2% change to 20-80 scale
+        let sentiment = 50 + (changePercent * 15);
         return Math.max(10, Math.min(90, sentiment));
     } catch (e) {
         return 50;
