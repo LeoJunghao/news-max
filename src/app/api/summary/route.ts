@@ -25,7 +25,7 @@ export async function POST(request: Request) {
         const now = new Date().toLocaleString('zh-TW', { timeZone: 'Asia/Taipei', hour12: false });
 
         // Construct the prompt
-        let prompt = `請擔任一位擁有 30 年全球財經資歷的專業分析師（持有 CFA 與 FRM 雙證照），根據以下提供的即時財經新聞與市場數據，撰寫一份深度「市場總結分析報告」。
+        let prompt = `現在時間是 **${now}**。請擔任一位擁有 30 年全球財經資歷的專業分析師（持有 CFA 與 FRM 雙證照），根據以下提供的即時財經新聞與市場數據，撰寫一份深度「市場總結分析報告」。
 
 ## 1. 專業身份定位 (Profile)
 - **資歷**：30年全球財經資歷，精通國際股市、期貨、原物料、加密貨幣與總體經濟週期分析。
@@ -61,6 +61,8 @@ export async function POST(request: Request) {
 4. **加密貨幣 (Cryptocurrency)**：比特幣/以太幣的趨勢與關鍵支撐壓力。
 
 ## 4. 輸出規範與約束 (Constraints & Formatting)
+- **時間準確性**：報告開頭或文中必須反映出現在是 **${now}**，確保時效性。
+- **禁止署名**：報告結尾**不需要**任何分析師簽名或頭銜（如「CFA 分析師 XXX 敬上」），直接結束即可。
 - **語氣要求**：穩健專業，使用經理人術語。
 - **重點強調 (High Visibility)**：
     - 關鍵數據與建議必須使用 **粗體 (Bold)**。
@@ -88,8 +90,8 @@ export async function POST(request: Request) {
 
         // Initialize Gemini
         const genAI = new GoogleGenerativeAI(apiKey);
-        // Using 'gemini-2.0-flash' as confirmed available in User's model list
-        const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+        // User requested Gemini Pro
+        const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
 
         const result = await model.generateContent(prompt);
         const response = await result.response;
