@@ -277,35 +277,35 @@ export function DashboardClient({ initialData, initialStats, lastUpdatedStr }: D
                     <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 p-4 bg-emerald-500/5 border-y border-emerald-500/20 backdrop-blur-sm">
                         <MacroItem
                             label="美2年債"
-                            value={stats?.us2Y?.price ? `${stats.us2Y.price.toFixed(2)}%` : '---'}
+                            value={stats?.us2Y?.price ? `${stats.us2Y.price.toFixed(3)}%` : '---'}
                             changePercent={stats?.us2Y?.changePercent}
                             loading={loading}
                             url="https://www.cnbc.com/quotes/US2Y"
                         />
                         <MacroItem
                             label="美10年債"
-                            value={stats?.us10Y?.price ? `${stats.us10Y.price.toFixed(2)}%` : '---'}
+                            value={stats?.us10Y?.price ? `${stats.us10Y.price.toFixed(3)}%` : '---'}
                             changePercent={stats?.us10Y?.changePercent}
                             loading={loading}
                             url="https://www.cnbc.com/quotes/US10Y"
                         />
                         <MacroItem
                             label="美元兌台幣"
-                            value={stats?.usdtwd?.price.toFixed(2) || '---'}
+                            value={stats?.usdtwd?.price.toFixed(3) || '---'}
                             changePercent={stats?.usdtwd?.changePercent}
                             loading={loading}
                             url="https://finance.yahoo.com/quote/TWD=X"
                         />
                         <MacroItem
                             label="美元兌日圓"
-                            value={stats?.usdjpy?.price.toFixed(2) || '---'}
+                            value={stats?.usdjpy?.price.toFixed(3) || '---'}
                             changePercent={stats?.usdjpy?.changePercent}
                             loading={loading}
                             url="https://finance.yahoo.com/quote/JPY=X"
                         />
                         <MacroItem
                             label="美元指數"
-                            value={stats?.dollarIndex?.price.toFixed(2) || '---'}
+                            value={stats?.dollarIndex?.price.toFixed(3) || '---'}
                             changePercent={stats?.dollarIndex?.changePercent}
                             loading={loading}
                             url="https://www.cnbc.com/quotes/.DXY"
