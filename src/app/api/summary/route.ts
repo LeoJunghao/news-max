@@ -92,15 +92,17 @@ export async function POST(request: Request) {
         const genAI = new GoogleGenerativeAI(apiKey);
 
         // Expanded Robust Fallback Strategy
-        // Include specific numbered versions (-002, -001) as they are sometimes more strictly mapped than aliased names for certain API Keys.
         const modelCandidates = [
-            "gemini-1.5-pro-002",   // Latest stable Pro
-            "gemini-1.5-flash-002", // Latest stable Flash
-            "gemini-1.5-pro",       // Alias
-            "gemini-1.5-flash",     // Alias
-            "gemini-1.5-pro-001",   // Previous stable
-            "gemini-1.5-flash-001", // Previous stable
-            "gemini-1.0-pro"        // Legacy
+            "gemini-2.0-flash-exp", // Experimental
+            "gemini-1.5-pro-latest",
+            "gemini-1.5-pro-002",
+            "gemini-1.5-flash-002",
+            "gemini-1.5-pro",
+            "gemini-1.5-flash",
+            "gemini-1.5-pro-001",
+            "gemini-1.5-flash-001",
+            "gemini-1.0-pro",
+            "gemini-pro"            // Legacy absolute base
         ];
 
         let text = "";
@@ -121,14 +123,30 @@ export async function POST(request: Request) {
             } catch (e: any) {
                 console.warn(`[AI Summary] Model ${modelName} failed:`, e.message);
                 errors.push(`${modelName}: ${e.message}`);
-                // Continue to next candidate
             }
         }
 
         if (!text) {
+            // DEEP DEBUG: Fetch list of available models to debug the 404 issue
+            let availableModels = "Could not fetch model list";
+            try {
+                const listRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${apiKey}`);
+                if (listRes.ok) {
+                    const listData = await listRes.json();
+                    const models = listData.models?.map((m: any) => m.name.replace('models/', '')) || [];
+                    availableModels = models.join(", ");
+                } else {
+                    const errText = await listRes.text();
+                    availableModels = `Fetch failed (${listRes.status}): ${errText}`;
+                }
+            } catch (listErr: any) {
+                availableModels = `Fetch error: ${listErr.message}`;
+            }
+
             console.error("[AI Summary] All models failed.");
-            // Return failure with detailed error log for the user to debug
-            throw new Error(`All models failed. Details: ${errors.join(" | ")}`);
+            console.error("Available models for this key:", availableModels);
+
+            throw new Error(`所有 AI 模型皆嘗試失敗 (404/Error)。\n您的 API Key 目前可用的模型列表為: [${availableModels}]。\n請檢查您的 API Key 權限設定。\n詳細錯誤: ${errors.join(" | ")}`);
         }
 
         return NextResponse.json({ summary: text });
