@@ -5,7 +5,7 @@ import { MarketStats } from '@/lib/stats';
 
 export async function POST(request: Request) {
     try {
-        const apiKey = process.env.GEMINI_API_KEY;
+        const apiKey = process.env.GEMINI_API_KEY?.trim();
         if (!apiKey) {
             return NextResponse.json(
                 { error: 'GEMINI_API_KEY is not defined in environment variables' },
@@ -91,36 +91,44 @@ export async function POST(request: Request) {
         // Initialize Gemini
         const genAI = new GoogleGenerativeAI(apiKey);
 
-        // Robust fallback strategy: Try latest models first, fallback to older ones if 404/API issues occur
+        // Expanded Robust Fallback Strategy
+        // Include specific numbered versions (-002, -001) as they are sometimes more strictly mapped than aliased names for certain API Keys.
         const modelCandidates = [
-            "gemini-1.5-pro",
-            "gemini-1.5-flash",
-            "gemini-1.0-pro",
-            "gemini-pro"
+            "gemini-1.5-pro-002",   // Latest stable Pro
+            "gemini-1.5-flash-002", // Latest stable Flash
+            "gemini-1.5-pro",       // Alias
+            "gemini-1.5-flash",     // Alias
+            "gemini-1.5-pro-001",   // Previous stable
+            "gemini-1.5-flash-001", // Previous stable
+            "gemini-1.0-pro"        // Legacy
         ];
 
         let text = "";
-        let lastError = null;
+        let errors: string[] = [];
 
         for (const modelName of modelCandidates) {
             try {
-                console.log(`Attempting to generate summary with model: ${modelName}`);
+                console.log(`[AI Summary] Attempting model: ${modelName}`);
                 const model = genAI.getGenerativeModel({ model: modelName });
                 const result = await model.generateContent(prompt);
                 const response = await result.response;
                 text = response.text();
 
-                if (text) break; // Success
+                if (text) {
+                    console.log(`[AI Summary] Success with model: ${modelName}`);
+                    break;
+                }
             } catch (e: any) {
-                console.warn(`Model ${modelName} failed:`, e.message);
-                lastError = e;
-                // If it's a content blocking error, we might want to stop? 
-                // But for 404/Quota issues, we continue to next candidate.
+                console.warn(`[AI Summary] Model ${modelName} failed:`, e.message);
+                errors.push(`${modelName}: ${e.message}`);
+                // Continue to next candidate
             }
         }
 
         if (!text) {
-            throw lastError || new Error("All model candidates failed to generate content.");
+            console.error("[AI Summary] All models failed.");
+            // Return failure with detailed error log for the user to debug
+            throw new Error(`All models failed. Details: ${errors.join(" | ")}`);
         }
 
         return NextResponse.json({ summary: text });
