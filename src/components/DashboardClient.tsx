@@ -206,59 +206,33 @@ export function DashboardClient({ initialData, initialStats, lastUpdatedStr }: D
                     transition={{ delay: 0.05 }}
                     className="max-w-7xl mx-auto mb-6 px-4 md:px-0"
                 >
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3 p-4 border-y border-purple-500/20 backdrop-blur-sm">
-                        <div className="col-span-2 md:col-span-4 flex items-center gap-2 text-cyan-400 font-bold font-mono text-sm tracking-wider uppercase mb-2">
+                    <div className="p-4 border-y border-purple-500/20 backdrop-blur-sm overflow-hidden">
+                        <div className="flex items-center gap-2 text-cyan-400 font-bold font-mono text-sm tracking-wider uppercase mb-4 px-2">
                             <TrendingUp size={16} />
                             主要股市指數
                         </div>
-                        <IndexItem
-                            label="費半指數"
-                            data={stats?.sox}
-                            loading={loading}
-                            url="https://finance.yahoo.com/quote/%5ESOX"
-                        />
-                        <IndexItem
-                            label="S&P 500"
-                            data={stats?.sp500Index}
-                            loading={loading}
-                            url="https://finance.yahoo.com/quote/%5EGSPC"
-                        />
-                        <IndexItem
-                            label="納斯達克"
-                            data={stats?.nasdaqComposite}
-                            loading={loading}
-                            url="https://finance.yahoo.com/quote/%5EIXIC"
-                        />
-                        <IndexItem
-                            label="道瓊工業"
-                            data={stats?.dji}
-                            loading={loading}
-                            url="https://finance.yahoo.com/quote/YM=F"
-                        />
-                        <IndexItem
-                            label="台股加權"
-                            data={stats?.twii}
-                            loading={loading}
-                            url="https://finance.yahoo.com/quote/%5ETWII"
-                        />
-                        <IndexItem
-                            label="櫃買指數"
-                            data={stats?.otc}
-                            loading={loading}
-                            url="https://finance.yahoo.com/quote/%5ETWO"
-                        />
-                        <IndexItem
-                            label="日經指數"
-                            data={stats?.nikkei225}
-                            loading={loading}
-                            url="https://finance.yahoo.com/quote/%5EN225"
-                        />
-                        <IndexItem
-                            label="韓國綜合"
-                            data={stats?.kospi}
-                            loading={loading}
-                            url="https://finance.yahoo.com/quote/%5EKS11"
-                        />
+
+                        <Marquee speed={40}>
+                            {[
+                                { label: "費半指數", data: stats?.sox, url: "https://finance.yahoo.com/quote/%5ESOX" },
+                                { label: "S&P 500", data: stats?.sp500Index, url: "https://finance.yahoo.com/quote/%5EGSPC" },
+                                { label: "納斯達克", data: stats?.nasdaqComposite, url: "https://finance.yahoo.com/quote/%5EIXIC" },
+                                { label: "道瓊工業", data: stats?.dji, url: "https://finance.yahoo.com/quote/YM=F" },
+                                { label: "台股加權", data: stats?.twii, url: "https://finance.yahoo.com/quote/%5ETWII" },
+                                { label: "櫃買指數", data: stats?.otc, url: "https://finance.yahoo.com/quote/%5ETWO" },
+                                { label: "日經指數", data: stats?.nikkei225, url: "https://finance.yahoo.com/quote/%5EN225" },
+                                { label: "韓國綜合", data: stats?.kospi, url: "https://finance.yahoo.com/quote/%5EKS11" },
+                            ].map((item, idx) => (
+                                <div key={idx} className="min-w-[200px] sm:min-w-[240px]">
+                                    <IndexItem
+                                        label={item.label}
+                                        data={item.data}
+                                        loading={loading}
+                                        url={item.url}
+                                    />
+                                </div>
+                            ))}
+                        </Marquee>
                     </div>
                 </motion.div>
 
@@ -654,6 +628,32 @@ export function DashboardClient({ initialData, initialStats, lastUpdatedStr }: D
                 </div>
             </main >
         </div >
+    );
+}
+
+function Marquee({ children, speed = 30 }: { children: React.ReactNode, speed?: number }) {
+    return (
+        <div className="overflow-hidden w-full relative group">
+            <div className="absolute left-0 top-0 bottom-0 w-8 z-10 bg-gradient-to-r from-[#050b14]/80 to-transparent pointer-events-none" />
+            <div className="absolute right-0 top-0 bottom-0 w-8 z-10 bg-gradient-to-l from-[#050b14]/80 to-transparent pointer-events-none" />
+
+            <motion.div
+                className="flex gap-4 w-max"
+                animate={{ x: "-50%" }}
+                transition={{
+                    duration: speed,
+                    ease: "linear",
+                    repeat: Infinity
+                }}
+            >
+                <div className="flex gap-4 shrink-0 items-stretch">
+                    {children}
+                </div>
+                <div className="flex gap-4 shrink-0 items-stretch">
+                    {children}
+                </div>
+            </motion.div>
+        </div>
     );
 }
 
