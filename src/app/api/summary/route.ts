@@ -90,8 +90,9 @@ export async function POST(request: Request) {
 
         // Initialize Gemini
         const genAI = new GoogleGenerativeAI(apiKey);
-        // Using 'gemini-1.5-pro-latest' as the stable alias
-        const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro-latest" });
+        // Switching to 'gemini-1.5-flash' as 1.5-pro appears unavailable for this API key
+        // 1.5 Flash is highly capable and supports the latest features
+        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
         const result = await model.generateContent(prompt);
         const response = await result.response;
