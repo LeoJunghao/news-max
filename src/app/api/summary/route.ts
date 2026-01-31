@@ -5,10 +5,10 @@ import { MarketStats } from '@/lib/stats';
 
 export async function POST(request: Request) {
     try {
-        const apiKey = process.env.GEMINI_API_KEY?.trim();
+        const apiKey = process.env.API_Key?.trim();
         if (!apiKey) {
             return NextResponse.json(
-                { error: 'GEMINI_API_KEY is not defined in environment variables' },
+                { error: 'API_Key is not defined in environment variables' },
                 { status: 500 }
             );
         }
