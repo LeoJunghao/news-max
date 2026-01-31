@@ -192,7 +192,7 @@ export function DashboardClient({ initialData, initialStats, lastUpdatedStr }: D
                                 url="https://finance.yahoo.com/quote/YM=F"
                             />
                             <IndexListItem
-                                label="台指期"
+                                label="台指期全"
                                 data={stats?.tx}
                                 loading={loading}
                                 url="https://finance.yahoo.com/quote/WTX=F"
