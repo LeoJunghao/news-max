@@ -249,93 +249,95 @@ export function DashboardClient({ initialData, initialStats, lastUpdatedStr }: D
                             【財經數據】
                         </h2>
                     </div>
-                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 p-4 bg-emerald-500/5 border-y border-emerald-500/20 backdrop-blur-sm">
-                        <MacroItem
-                            label="美2年債"
-                            value={stats?.us2Y?.price ? `${stats.us2Y.price.toFixed(3)}%` : '---'}
-                            changePercent={stats?.us2Y?.changePercent}
-                            loading={loading}
-                            url="https://www.cnbc.com/quotes/US2Y"
-                        />
-                        <MacroItem
-                            label="美10年債"
-                            value={stats?.us10Y?.price ? `${stats.us10Y.price.toFixed(3)}%` : '---'}
-                            changePercent={stats?.us10Y?.changePercent}
-                            loading={loading}
-                            url="https://www.cnbc.com/quotes/US10Y"
-                        />
-                        <MacroItem
-                            label="美元兌台幣"
-                            value={stats?.usdtwd?.price.toFixed(3) || '---'}
-                            changePercent={stats?.usdtwd?.changePercent}
-                            loading={loading}
-                            url="https://finance.yahoo.com/quote/TWD=X"
-                        />
-                        <MacroItem
-                            label="美元兌日圓"
-                            value={stats?.usdjpy?.price.toFixed(3) || '---'}
-                            changePercent={stats?.usdjpy?.changePercent}
-                            loading={loading}
-                            url="https://finance.yahoo.com/quote/JPY=X"
-                        />
-                        <MacroItem
-                            label="美元指數"
-                            value={stats?.dollarIndex?.price.toFixed(3) || '---'}
-                            changePercent={stats?.dollarIndex?.changePercent}
-                            loading={loading}
-                            url="https://www.cnbc.com/quotes/.DXY"
-                        />
-                        <MacroItem
-                            label="布蘭特原油"
-                            value={`$${stats?.brentCrude?.price.toFixed(2)}`}
-                            changePercent={stats?.brentCrude?.changePercent}
-                            loading={loading}
-                            url="https://finance.yahoo.com/quote/BZ=F"
-                        />
-                        <MacroItem
-                            label="比特幣"
-                            value={`$${stats?.bitcoin?.price.toLocaleString(undefined, { maximumFractionDigits: 0 }) || '---'}`}
-                            changePercent={stats?.bitcoin?.changePercent}
-                            loading={loading}
-                            url="https://finance.yahoo.com/quote/BTC-USD"
-                        />
-                        <MacroItem
-                            label="乙太幣"
-                            value={`$${stats?.ethereum?.price.toLocaleString(undefined, { maximumFractionDigits: 0 }) || '---'}`}
-                            changePercent={stats?.ethereum?.changePercent}
-                            loading={loading}
-                            url="https://finance.yahoo.com/quote/ETH-USD"
-                        />
-                        <MacroItem
-                            label="黃金價格"
-                            value={`$${stats?.goldPrice?.price.toFixed(1) || '---'}`}
-                            changePercent={stats?.goldPrice?.changePercent}
-                            loading={loading}
-                            url="https://finance.yahoo.com/quote/GC=F"
-                        />
-                        <MacroItem
-                            label="銅價"
-                            value={`$${stats?.copper?.price.toFixed(2) || '---'}`}
-                            changePercent={stats?.copper?.changePercent}
-                            loading={loading}
-                            url="https://finance.yahoo.com/quote/HG=F"
-                        />
-                        <MacroItem
-                            label="BDI 航運"
-                            value={`${stats?.bdi?.price.toFixed(0) || '---'}`}
-                            changePercent={stats?.bdi?.changePercent}
-                            loading={loading}
-                            url="https://www.cnbc.com/quotes/.BADI"
-                        />
-                        <MacroItem
-                            label="台積電溢價"
-                            value={stats?.tsmAdr?.price && stats?.tsmTw?.price && stats?.usdtwd?.price
-                                ? `${(((stats.tsmAdr.price * stats.usdtwd.price / 5) - stats.tsmTw.price) / stats.tsmTw.price * 100).toFixed(1)}%`
-                                : '---'}
-                            changePercent={undefined}
-                            loading={loading}
-                            url="https://finance.yahoo.com/quote/2330.TW"
-                        />
+                    <div className="flex flex-col gap-2 p-4 bg-emerald-500/5 border-y border-emerald-500/20 backdrop-blur-sm">
+                        <div className="space-y-2">
+                            <MacroItem
+                                label="美2年債"
+                                value={stats?.us2Y?.price ? `${stats.us2Y.price.toFixed(3)}%` : '---'}
+                                changePercent={stats?.us2Y?.changePercent}
+                                loading={loading}
+                                url="https://www.cnbc.com/quotes/US2Y"
+                            />
+                            <MacroItem
+                                label="美10年債"
+                                value={stats?.us10Y?.price ? `${stats.us10Y.price.toFixed(3)}%` : '---'}
+                                changePercent={stats?.us10Y?.changePercent}
+                                loading={loading}
+                                url="https://www.cnbc.com/quotes/US10Y"
+                            />
+                            <MacroItem
+                                label="美元兌台幣"
+                                value={stats?.usdtwd?.price.toFixed(3) || '---'}
+                                changePercent={stats?.usdtwd?.changePercent}
+                                loading={loading}
+                                url="https://finance.yahoo.com/quote/TWD=X"
+                            />
+                            <MacroItem
+                                label="美元兌日圓"
+                                value={stats?.usdjpy?.price.toFixed(3) || '---'}
+                                changePercent={stats?.usdjpy?.changePercent}
+                                loading={loading}
+                                url="https://finance.yahoo.com/quote/JPY=X"
+                            />
+                            <MacroItem
+                                label="美元指數"
+                                value={stats?.dollarIndex?.price.toFixed(3) || '---'}
+                                changePercent={stats?.dollarIndex?.changePercent}
+                                loading={loading}
+                                url="https://www.cnbc.com/quotes/.DXY"
+                            />
+                            <MacroItem
+                                label="布蘭特原油"
+                                value={`$${stats?.brentCrude?.price.toFixed(2)}`}
+                                changePercent={stats?.brentCrude?.changePercent}
+                                loading={loading}
+                                url="https://finance.yahoo.com/quote/BZ=F"
+                            />
+                            <MacroItem
+                                label="比特幣"
+                                value={`$${stats?.bitcoin?.price.toLocaleString(undefined, { maximumFractionDigits: 0 }) || '---'}`}
+                                changePercent={stats?.bitcoin?.changePercent}
+                                loading={loading}
+                                url="https://finance.yahoo.com/quote/BTC-USD"
+                            />
+                            <MacroItem
+                                label="乙太幣"
+                                value={`$${stats?.ethereum?.price.toLocaleString(undefined, { maximumFractionDigits: 0 }) || '---'}`}
+                                changePercent={stats?.ethereum?.changePercent}
+                                loading={loading}
+                                url="https://finance.yahoo.com/quote/ETH-USD"
+                            />
+                            <MacroItem
+                                label="黃金價格"
+                                value={`$${stats?.goldPrice?.price.toFixed(1) || '---'}`}
+                                changePercent={stats?.goldPrice?.changePercent}
+                                loading={loading}
+                                url="https://finance.yahoo.com/quote/GC=F"
+                            />
+                            <MacroItem
+                                label="銅價"
+                                value={`$${stats?.copper?.price.toFixed(2) || '---'}`}
+                                changePercent={stats?.copper?.changePercent}
+                                loading={loading}
+                                url="https://finance.yahoo.com/quote/HG=F"
+                            />
+                            <MacroItem
+                                label="BDI 航運"
+                                value={`${stats?.bdi?.price.toFixed(0) || '---'}`}
+                                changePercent={stats?.bdi?.changePercent}
+                                loading={loading}
+                                url="https://www.cnbc.com/quotes/.BADI"
+                            />
+                            <MacroItem
+                                label="台積電溢價"
+                                value={stats?.tsmAdr?.price && stats?.tsmTw?.price && stats?.usdtwd?.price
+                                    ? `${(((stats.tsmAdr.price * stats.usdtwd.price / 5) - stats.tsmTw.price) / stats.tsmTw.price * 100).toFixed(1)}%`
+                                    : '---'}
+                                changePercent={undefined}
+                                loading={loading}
+                                url="https://finance.yahoo.com/quote/2330.TW"
+                            />
+                        </div>
                     </div>
                 </motion.div>
 
@@ -346,67 +348,69 @@ export function DashboardClient({ initialData, initialStats, lastUpdatedStr }: D
                     transition={{ delay: 0.05 }}
                     className="max-w-7xl mx-auto mb-6 px-4 md:px-0"
                 >
-                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 p-4 bg-purple-500/5 border-y border-purple-500/20 backdrop-blur-sm">
-                        <div className="col-span-2 lg:col-span-4 flex items-center gap-2 text-cyan-400 font-medium font-mono text-sm tracking-wider uppercase mb-2">
+                    <div className="flex flex-col gap-2 p-4 bg-purple-500/5 border-y border-purple-500/20 backdrop-blur-sm">
+                        <div className="flex items-center gap-2 text-cyan-400 font-medium font-mono text-sm tracking-wider uppercase mb-2 px-2">
                             <Cpu size={16} />
                             AI &amp; Tech Giants
                         </div>
-                        <MacroItem
-                            label="NVIDIA"
-                            value={stats?.nvda?.price ? `$${stats.nvda.price.toFixed(2)}` : '---'}
-                            changePercent={stats?.nvda?.changePercent}
-                            loading={loading}
-                            url="https://finance.yahoo.com/quote/NVDA"
-                        />
-                        <MacroItem
-                            label="TSMC ADR"
-                            value={stats?.tsmAdr?.price ? `$${stats.tsmAdr.price.toFixed(2)}` : '---'}
-                            changePercent={stats?.tsmAdr?.changePercent}
-                            loading={loading}
-                            url="https://finance.yahoo.com/quote/TSM"
-                        />
-                        <MacroItem
-                            label="AMD"
-                            value={stats?.amd?.price ? `$${stats.amd.price.toFixed(2)}` : '---'}
-                            changePercent={stats?.amd?.changePercent}
-                            loading={loading}
-                            url="https://finance.yahoo.com/quote/AMD"
-                        />
-                        <MacroItem
-                            label="Micron"
-                            value={stats?.mu?.price ? `$${stats.mu.price.toFixed(2)}` : '---'}
-                            changePercent={stats?.mu?.changePercent}
-                            loading={loading}
-                            url="https://finance.yahoo.com/quote/MU"
-                        />
-                        <MacroItem
-                            label="Microsoft"
-                            value={stats?.msft?.price ? `$${stats.msft.price.toFixed(2)}` : '---'}
-                            changePercent={stats?.msft?.changePercent}
-                            loading={loading}
-                            url="https://finance.yahoo.com/quote/MSFT"
-                        />
-                        <MacroItem
-                            label="Google"
-                            value={stats?.googl?.price ? `$${stats.googl.price.toFixed(2)}` : '---'}
-                            changePercent={stats?.googl?.changePercent}
-                            loading={loading}
-                            url="https://finance.yahoo.com/quote/GOOGL"
-                        />
-                        <MacroItem
-                            label="Meta"
-                            value={stats?.meta?.price ? `$${stats.meta.price.toFixed(2)}` : '---'}
-                            changePercent={stats?.meta?.changePercent}
-                            loading={loading}
-                            url="https://finance.yahoo.com/quote/META"
-                        />
-                        <MacroItem
-                            label="Apple"
-                            value={stats?.aapl?.price ? `$${stats.aapl.price.toFixed(2)}` : '---'}
-                            changePercent={stats?.aapl?.changePercent}
-                            loading={loading}
-                            url="https://finance.yahoo.com/quote/AAPL"
-                        />
+                        <div className="space-y-2">
+                            <MacroItem
+                                label="NVIDIA"
+                                value={stats?.nvda?.price ? `$${stats.nvda.price.toFixed(2)}` : '---'}
+                                changePercent={stats?.nvda?.changePercent}
+                                loading={loading}
+                                url="https://finance.yahoo.com/quote/NVDA"
+                            />
+                            <MacroItem
+                                label="TSMC ADR"
+                                value={stats?.tsmAdr?.price ? `$${stats.tsmAdr.price.toFixed(2)}` : '---'}
+                                changePercent={stats?.tsmAdr?.changePercent}
+                                loading={loading}
+                                url="https://finance.yahoo.com/quote/TSM"
+                            />
+                            <MacroItem
+                                label="AMD"
+                                value={stats?.amd?.price ? `$${stats.amd.price.toFixed(2)}` : '---'}
+                                changePercent={stats?.amd?.changePercent}
+                                loading={loading}
+                                url="https://finance.yahoo.com/quote/AMD"
+                            />
+                            <MacroItem
+                                label="Micron"
+                                value={stats?.mu?.price ? `$${stats.mu.price.toFixed(2)}` : '---'}
+                                changePercent={stats?.mu?.changePercent}
+                                loading={loading}
+                                url="https://finance.yahoo.com/quote/MU"
+                            />
+                            <MacroItem
+                                label="Microsoft"
+                                value={stats?.msft?.price ? `$${stats.msft.price.toFixed(2)}` : '---'}
+                                changePercent={stats?.msft?.changePercent}
+                                loading={loading}
+                                url="https://finance.yahoo.com/quote/MSFT"
+                            />
+                            <MacroItem
+                                label="Google"
+                                value={stats?.googl?.price ? `$${stats.googl.price.toFixed(2)}` : '---'}
+                                changePercent={stats?.googl?.changePercent}
+                                loading={loading}
+                                url="https://finance.yahoo.com/quote/GOOGL"
+                            />
+                            <MacroItem
+                                label="Meta"
+                                value={stats?.meta?.price ? `$${stats.meta.price.toFixed(2)}` : '---'}
+                                changePercent={stats?.meta?.changePercent}
+                                loading={loading}
+                                url="https://finance.yahoo.com/quote/META"
+                            />
+                            <MacroItem
+                                label="Apple"
+                                value={stats?.aapl?.price ? `$${stats.aapl.price.toFixed(2)}` : '---'}
+                                changePercent={stats?.aapl?.changePercent}
+                                loading={loading}
+                                url="https://finance.yahoo.com/quote/AAPL"
+                            />
+                        </div>
                     </div>
                 </motion.div>
 
@@ -417,53 +421,55 @@ export function DashboardClient({ initialData, initialStats, lastUpdatedStr }: D
                     transition={{ delay: 0.1 }}
                     className="max-w-7xl mx-auto mb-6 px-4 md:px-0"
                 >
-                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 p-4 bg-purple-500/5 border-y border-purple-500/20 backdrop-blur-sm">
-                        <div className="col-span-2 lg:col-span-4 flex items-center gap-2 text-cyan-400 font-medium font-mono text-sm tracking-wider uppercase mb-2">
+                    <div className="flex flex-col gap-2 p-4 bg-purple-500/5 border-y border-purple-500/20 backdrop-blur-sm">
+                        <div className="flex items-center gap-2 text-cyan-400 font-medium font-mono text-sm tracking-wider uppercase mb-2 px-2">
                             <Cpu size={16} />
                             台灣權值
                         </div>
-                        <MacroItem
-                            label="台積電 (2330)"
-                            value={stats?.tsmTw?.price ? `$${stats.tsmTw.price.toFixed(0)}` : '---'}
-                            changePercent={stats?.tsmTw?.changePercent}
-                            loading={loading}
-                            url="https://finance.yahoo.com/quote/2330.TW"
-                        />
-                        <MacroItem
-                            label="鴻海 (2317)"
-                            value={stats?.foxconn?.price ? `$${stats.foxconn.price.toFixed(1)}` : '---'}
-                            changePercent={stats?.foxconn?.changePercent}
-                            loading={loading}
-                            url="https://finance.yahoo.com/quote/2317.TW"
-                        />
-                        <MacroItem
-                            label="聯發科 (2454)"
-                            value={stats?.mediatek?.price ? `$${stats.mediatek.price.toFixed(0)}` : '---'}
-                            changePercent={stats?.mediatek?.changePercent}
-                            loading={loading}
-                            url="https://finance.yahoo.com/quote/2454.TW"
-                        />
-                        <MacroItem
-                            label="廣達 (2382)"
-                            value={stats?.quanta?.price ? `$${stats.quanta.price.toFixed(1)}` : '---'}
-                            changePercent={stats?.quanta?.changePercent}
-                            loading={loading}
-                            url="https://finance.yahoo.com/quote/2382.TW"
-                        />
-                        <MacroItem
-                            label="台達電 (2308)"
-                            value={stats?.delta?.price ? `$${stats.delta.price.toFixed(1)}` : '---'}
-                            changePercent={stats?.delta?.changePercent}
-                            loading={loading}
-                            url="https://finance.yahoo.com/quote/2308.TW"
-                        />
-                        <MacroItem
-                            label="富邦金 (2881)"
-                            value={stats?.fubon?.price ? `$${stats.fubon.price.toFixed(1)}` : '---'}
-                            changePercent={stats?.fubon?.changePercent}
-                            loading={loading}
-                            url="https://finance.yahoo.com/quote/2881.TW"
-                        />
+                        <div className="space-y-2">
+                            <MacroItem
+                                label="台積電 (2330)"
+                                value={stats?.tsmTw?.price ? `$${stats.tsmTw.price.toFixed(0)}` : '---'}
+                                changePercent={stats?.tsmTw?.changePercent}
+                                loading={loading}
+                                url="https://finance.yahoo.com/quote/2330.TW"
+                            />
+                            <MacroItem
+                                label="鴻海 (2317)"
+                                value={stats?.foxconn?.price ? `$${stats.foxconn.price.toFixed(1)}` : '---'}
+                                changePercent={stats?.foxconn?.changePercent}
+                                loading={loading}
+                                url="https://finance.yahoo.com/quote/2317.TW"
+                            />
+                            <MacroItem
+                                label="聯發科 (2454)"
+                                value={stats?.mediatek?.price ? `$${stats.mediatek.price.toFixed(0)}` : '---'}
+                                changePercent={stats?.mediatek?.changePercent}
+                                loading={loading}
+                                url="https://finance.yahoo.com/quote/2454.TW"
+                            />
+                            <MacroItem
+                                label="廣達 (2382)"
+                                value={stats?.quanta?.price ? `$${stats.quanta.price.toFixed(1)}` : '---'}
+                                changePercent={stats?.quanta?.changePercent}
+                                loading={loading}
+                                url="https://finance.yahoo.com/quote/2382.TW"
+                            />
+                            <MacroItem
+                                label="台達電 (2308)"
+                                value={stats?.delta?.price ? `$${stats.delta.price.toFixed(1)}` : '---'}
+                                changePercent={stats?.delta?.changePercent}
+                                loading={loading}
+                                url="https://finance.yahoo.com/quote/2308.TW"
+                            />
+                            <MacroItem
+                                label="富邦金 (2881)"
+                                value={stats?.fubon?.price ? `$${stats.fubon.price.toFixed(1)}` : '---'}
+                                changePercent={stats?.fubon?.changePercent}
+                                loading={loading}
+                                url="https://finance.yahoo.com/quote/2881.TW"
+                            />
+                        </div>
                     </div>
                 </motion.div>
 
@@ -718,35 +724,43 @@ function IndexItem({ label, data, loading, url }: { label: string, data?: Market
 
 function MacroItem({ label, value, changePercent, loading, url }: { label: string, value: string, changePercent?: number, loading: boolean, url?: string }) {
     if (loading) return (
-        <div className="flex flex-col items-center justify-center p-3 rounded-lg border border-slate-700 bg-slate-900/50 animate-pulse h-[80px] w-full">
-            <div className="h-3 w-20 bg-slate-800 rounded mb-2"></div>
-            <div className="h-5 w-16 bg-slate-800/50 rounded"></div>
+        <div className="flex flex-col justify-center p-3 rounded-lg bg-slate-900/50 border border-slate-700 animate-pulse h-[70px]">
+            <div className="h-3 w-24 bg-slate-800 rounded mb-2"></div>
+            <div className="flex justify-between w-full">
+                <div className="h-4 w-16 bg-slate-800/50 rounded"></div>
+                <div className="h-4 w-12 bg-slate-800/50 rounded"></div>
+            </div>
         </div>
     );
 
     const isUp = (changePercent || 0) >= 0;
-    // Taiwan logic: Red = Up, Green = Down
     const trendColor = isUp ? 'text-red-400' : 'text-green-400';
 
     const content = (
-        <div className="flex flex-col items-center justify-center p-3 rounded-lg border border-purple-500/20 bg-slate-900/40 hover:bg-slate-800/60 hover:border-purple-500/40 transition-all group w-full h-full">
-            <span className="text-base font-medium font-mono text-purple-300/95 uppercase tracking-wider mb-1 text-center flex items-center gap-1 drop-shadow-[0_0_3px_rgba(168,85,247,0.5)]">
-                {label}
-            </span>
-            <span className="text-xl font-normal font-mono tracking-tight text-slate-100 group-hover:text-white transition-colors">
-                {value}
-            </span>
-            {changePercent !== undefined && (
-                <span className={cn("text-sm font-normal font-mono mt-0.5", trendColor)}>
-                    {isUp ? '▲' : '▼'} {Math.abs(changePercent).toFixed(2)}%
+        <div className="flex flex-col p-3 rounded-lg border border-purple-500/20 bg-slate-900/40 hover:bg-slate-800/60 hover:border-purple-500/40 transition-all group">
+            {/* Row 1: Label */}
+            <div className="mb-1">
+                <span className="text-base font-medium font-mono text-purple-300/95 uppercase tracking-wider flex items-center gap-1 drop-shadow-[0_0_3px_rgba(168,85,247,0.5)]">
+                    {label}
                 </span>
-            )}
+            </div>
+            {/* Row 2: Values */}
+            <div className="flex items-end justify-between">
+                <span className="text-xl font-normal font-mono tracking-tight text-slate-100 group-hover:text-white transition-colors leading-none">
+                    {value}
+                </span>
+                {changePercent !== undefined && (
+                    <span className={cn("text-sm font-normal font-mono flex items-center leading-none", trendColor)}>
+                        {isUp ? '▲' : '▼'} {Math.abs(changePercent).toFixed(2)}%
+                    </span>
+                )}
+            </div>
         </div>
     );
 
     if (url) {
         return (
-            <a href={url} target="_blank" rel="noopener noreferrer" className="block w-full h-full">
+            <a href={url} target="_blank" rel="noopener noreferrer" className="block w-full">
                 {content}
             </a>
         );
