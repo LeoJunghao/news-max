@@ -178,84 +178,60 @@ async function getDJI(): Promise<MarketQuote> { return getYahooQuote('YM=F'); }
 async function getNasdaq(): Promise<MarketQuote> { return getYahooQuote('NQ=F'); } // Nasdaq 100 Futures
 async function getNasdaqComposite(): Promise<MarketQuote> { return getYahooQuote('%5EIXIC'); } // Nasdaq Composite
 async function getTWII(): Promise<MarketQuote> { return getYahooQuote('%5ETWII'); }
-// Helper to getting FinMind TX Data
-async function getFinMindTX(): Promise<MarketQuote | null> {
-    const apiKey = process.env.FINMIND_API_TOKEN;
-    // FinMind API usage without token is rate-limited or restricted, so we check for it but proceed if missing (in case free tier works)
+// Helper to getting Fugle TX Data
+async function getFugleTX(): Promise<MarketQuote | null> {
+    const apiKey = process.env.FUGLE_API_KEY;
+    if (!apiKey) return null;
 
     try {
-        const url = 'https://api.finmindtrade.com/api/v4/data?dataset=taiwan_futures_snapshot&data_id=TXF';
-        const headers: HeadersInit = {};
-        if (apiKey) {
-            headers['Authorization'] = `Bearer ${apiKey}`;
-        }
-
-        const res = await fetch(url, {
-            headers,
-            next: { revalidate: 60 }
+        // 1. Get list of TXF contracts to find the active one (Near month)
+        // Filtering for FUTURE, TAIFEX, and TXF product
+        const listRes = await fetch('https://api.fugle.tw/marketdata/v1.0/futopt/intraday/tickers?type=FUTURE&exchange=TAIFEX&symbol=TXF', {
+            headers: { 'X-API-KEY': apiKey },
+            next: { revalidate: 300 } // Revalidate list every 5 mins
         });
 
-        if (!res.ok) return null;
+        if (!listRes.ok) return null;
 
-        const json = await res.json();
-        // FinMind data structure: { msg: "success", status: 200, data: [...] }
-        if (!json.data || json.data.length === 0) return null;
+        const listData = await listRes.json();
+        // Sort by symbol to find the nearest date (e.g. TXF202402 < TXF202403)
+        // Filter for "Regular" contracts (Standard active contracts usually strictly follow TXF+YM format)
+        // We look for standard length symbols to avoid spreads if formatted differently, 
+        // though usually standard contracts are just 3 chars + YearMonth (+opt Day)
+        const contracts = (listData.data || [])
+            .map((c: any) => c.symbol)
+            .sort();
 
-        // FinMind might return multiple contracts for "TXF" suffix (e.g. TXF202402, TXF202403) or just the generic depending on query.
-        // Assuming the API returns a list of contracts if broad match, or specific if exact.
-        // For 'TXF', it often returns the available contracts. 
-        // We want the near-month (active) contract. 
-        // Strategy: Sort by data_id (symbol) or volume?
-        // Usually the nearest month has the earliest date code.
-        // FinMind snapshots usually include all open contracts.
-        // Let's sort by id length and then lexical to find standard YYMM contracts, picking the first one (Active).
+        if (contracts.length === 0) return null;
 
-        let contracts = json.data;
+        const activeSymbol = contracts[0]; // Pick the nearest month
 
-        // Simple heuristic: If multiple, pick the one with volume? Or just the first one usually corresponds to near month in sorted lists.
-        // Let's try to find one that looks like "TXF" + numbers.
-        // Actually, if we just asked for data_id=TXF, it might strictly return TXF?
-        // If it returns empty, maybe we need to fetch specific?
-        // But usually "TXF" works as a prefix filter or exact ID.
-        // Let's assume the first entry is relevant or we sort by volume if available?
-        // Snapshot data has `volume`.
+        // 2. Get Quote for the active symbol
+        const quoteRes = await fetch(`https://api.fugle.tw/marketdata/v1.0/futopt/intraday/quote/${activeSymbol}`, {
+            headers: { 'X-API-KEY': apiKey },
+            next: { revalidate: 30 }
+        });
 
-        // Sort by volume descending to get the most active contract (Hot)
-        if (contracts.length > 1) {
-            contracts.sort((a: any, b: any) => (b.volume || 0) - (a.volume || 0));
-        }
+        if (!quoteRes.ok) return null;
 
-        const data = contracts[0];
+        const quoteData = await quoteRes.json();
+        if (!quoteData.lastPrice) return null;
 
-        // Fields: close (price), change_price, open, high, low...
-        const price = data.close || data.last_price;
-        if (!price) return null;
-
-        let changePercent = 0;
-        if (data.change_rate !== undefined) {
-            changePercent = data.change_rate; // Check if this is % (e.g. 1.23) or decimal (0.0123). FinMind usually returns decimal for stock?
-            // Actually, safer to calculate if change_price exists
-        }
-
-        if (data.change_price !== undefined) {
-            const prev = price - data.change_price;
-            if (prev !== 0) {
-                changePercent = (data.change_price / prev) * 100;
-            }
-        }
+        const price = quoteData.lastPrice;
+        const changePercent = quoteData.changePercent || 0;
 
         return { price, changePercent };
 
     } catch (e) {
-        console.error("FinMind API Error:", e);
-        return null;
+        console.error("Fugle API Error:", e);
+        return null; // Fallback
     }
 }
 
 async function getTX(): Promise<MarketQuote> {
-    // 1. Try FinMind API First
-    const finMindData = await getFinMindTX();
-    if (finMindData) return finMindData;
+    // 1. Try Fugle API First
+    const fugleData = await getFugleTX();
+    if (fugleData) return fugleData;
 
     // 2. Fallback to Yahoo Scrape
     try {
