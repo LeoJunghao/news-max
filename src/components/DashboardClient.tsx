@@ -666,7 +666,7 @@ function IndexListItem({ label, data, loading, url }: { label: string, data?: Ma
                 <span className="text-lg font-normal font-mono text-slate-100 leading-none">
                     {data.price.toLocaleString(undefined, { maximumFractionDigits: 2 })}
                 </span>
-                <span className={cn("text-sm font-mono font-normal flex items-center leading-none", colorClass)}>
+                <span className={cn("text-base font-mono font-normal flex items-center leading-none", colorClass)}>
                     {isUp ? '▲' : '▼'} {Math.abs(data.changePercent).toFixed(2)}%
                 </span>
             </div>
@@ -750,7 +750,7 @@ function MacroItem({ label, value, changePercent, loading, url }: { label: strin
                     {value}
                 </span>
                 {changePercent !== undefined && (
-                    <span className={cn("text-sm font-normal font-mono flex items-center leading-none", trendColor)}>
+                    <span className={cn("text-base font-normal font-mono flex items-center leading-none", trendColor)}>
                         {isUp ? '▲' : '▼'} {Math.abs(changePercent).toFixed(2)}%
                     </span>
                 )}
