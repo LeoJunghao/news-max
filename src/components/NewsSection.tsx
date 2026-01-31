@@ -41,7 +41,7 @@ export function NewsSection({ title, items, color }: SectionProps) {
         <div className="mb-6">
             <div className={cn("flex items-center gap-2 mb-4 pb-2 border-b", styles.border)}>
                 <div className={cn("w-1 h-5 rounded-full", styles.dot)} />
-                <h2 className={cn("text-lg font-bold tracking-wider uppercase", styles.text)}>
+                <h2 className={cn("text-lg font-medium tracking-wider uppercase", styles.text)}>
                     {title} <span className="text-slate-600 text-xs ml-2 font-mono">({items.length})</span>
                 </h2>
             </div>

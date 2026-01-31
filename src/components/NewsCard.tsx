@@ -8,7 +8,7 @@ export function NewsCard({ item }: { item: NewsItem }) {
     return (
         <div className="glass-panel p-3 rounded-lg transition-all hover:scale-[1.01] hover:shadow-cyan-500/10 group flex flex-col h-full bg-slate-900/40 border border-white/5">
             <div className="flex justify-between items-start gap-3 mb-2">
-                <h3 className="font-semibold text-[15px] text-slate-100 leading-snug group-hover:text-cyan-400 transition-colors line-clamp-2">
+                <h3 className="font-medium text-[15px] text-slate-100 leading-snug group-hover:text-cyan-400 transition-colors line-clamp-2">
                     {item.title}
                 </h3>
             </div>

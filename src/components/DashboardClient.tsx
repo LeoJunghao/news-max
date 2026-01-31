@@ -129,7 +129,7 @@ export function DashboardClient({ initialData, initialStats, lastUpdatedStr }: D
                         <Zap className="text-cyan-400" size={20} />
                     </div>
                     <div className="flex flex-col">
-                        <h1 className="text-xl font-bold text-yellow-400 font-mono tracking-tighter drop-shadow-[0_0_5px_rgba(250,204,21,0.8)]">
+                        <h1 className="text-xl font-medium text-yellow-400 font-mono tracking-tighter drop-shadow-[0_0_5px_rgba(250,204,21,0.8)]">
                             財經總評
                         </h1>
                         <p className="text-[10px] text-slate-500 font-mono tracking-wider flex items-center gap-2">
@@ -168,7 +168,7 @@ export function DashboardClient({ initialData, initialStats, lastUpdatedStr }: D
                     className="max-w-7xl mx-auto mb-6 px-4 md:px-0"
                 >
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-3 p-4 border-y border-cyan-500/20 backdrop-blur-sm bg-cyan-950/10">
-                        <div className="col-span-2 md:col-span-4 flex items-center gap-2 text-cyan-400 font-bold font-mono text-sm tracking-wider uppercase mb-2">
+                        <div className="col-span-2 md:col-span-4 flex items-center gap-2 text-cyan-400 font-medium font-mono text-sm tracking-wider uppercase mb-2">
                             <Zap size={16} />
                             期貨指數
                         </div>
@@ -206,33 +206,30 @@ export function DashboardClient({ initialData, initialStats, lastUpdatedStr }: D
                     transition={{ delay: 0.05 }}
                     className="max-w-7xl mx-auto mb-6 px-4 md:px-0"
                 >
-                    <div className="p-4 border-y border-purple-500/20 backdrop-blur-sm overflow-hidden">
-                        <div className="flex items-center gap-2 text-cyan-400 font-bold font-mono text-sm tracking-wider uppercase mb-4 px-2">
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3 p-4 border-y border-purple-500/20 backdrop-blur-sm overflow-hidden">
+                        <div className="col-span-2 md:col-span-4 flex items-center gap-2 text-cyan-400 font-medium font-mono text-sm tracking-wider uppercase mb-4 px-2">
                             <TrendingUp size={16} />
                             主要股市指數
                         </div>
 
-                        <Marquee speed={40}>
-                            {[
-                                { label: "費半指數", data: stats?.sox, url: "https://finance.yahoo.com/quote/%5ESOX" },
-                                { label: "S&P 500", data: stats?.sp500Index, url: "https://finance.yahoo.com/quote/%5EGSPC" },
-                                { label: "納斯達克", data: stats?.nasdaqComposite, url: "https://finance.yahoo.com/quote/%5EIXIC" },
-                                { label: "道瓊工業", data: stats?.dji, url: "https://finance.yahoo.com/quote/YM=F" },
-                                { label: "台股加權", data: stats?.twii, url: "https://finance.yahoo.com/quote/%5ETWII" },
-                                { label: "櫃買指數", data: stats?.otc, url: "https://finance.yahoo.com/quote/%5ETWO" },
-                                { label: "日經指數", data: stats?.nikkei225, url: "https://finance.yahoo.com/quote/%5EN225" },
-                                { label: "韓國綜合", data: stats?.kospi, url: "https://finance.yahoo.com/quote/%5EKS11" },
-                            ].map((item, idx) => (
-                                <div key={idx} className="min-w-[200px] sm:min-w-[240px]">
-                                    <IndexItem
-                                        label={item.label}
-                                        data={item.data}
-                                        loading={loading}
-                                        url={item.url}
-                                    />
-                                </div>
-                            ))}
-                        </Marquee>
+                        {[
+                            { label: "費半指數", data: stats?.sox, url: "https://finance.yahoo.com/quote/%5ESOX" },
+                            { label: "S&P 500", data: stats?.sp500Index, url: "https://finance.yahoo.com/quote/%5EGSPC" },
+                            { label: "納斯達克", data: stats?.nasdaqComposite, url: "https://finance.yahoo.com/quote/%5EIXIC" },
+                            { label: "道瓊工業", data: stats?.dji, url: "https://finance.yahoo.com/quote/YM=F" },
+                            { label: "台股加權", data: stats?.twii, url: "https://finance.yahoo.com/quote/%5ETWII" },
+                            { label: "櫃買指數", data: stats?.otc, url: "https://finance.yahoo.com/quote/%5ETWO" },
+                            { label: "日經指數", data: stats?.nikkei225, url: "https://finance.yahoo.com/quote/%5EN225" },
+                            { label: "韓國綜合", data: stats?.kospi, url: "https://finance.yahoo.com/quote/%5EKS11" },
+                        ].map((item, idx) => (
+                            <IndexItem
+                                key={idx}
+                                label={item.label}
+                                data={item.data}
+                                loading={loading}
+                                url={item.url}
+                            />
+                        ))}
                     </div>
                 </motion.div>
 
@@ -244,7 +241,7 @@ export function DashboardClient({ initialData, initialStats, lastUpdatedStr }: D
                 >
                     <div className="flex items-center gap-3 mb-3 px-2">
                         <div className="w-1 h-5 bg-cyan-500 shadow-[0_0_10px_rgba(6,182,212,0.5)] rounded-full" />
-                        <h2 className="text-lg font-bold text-slate-100 tracking-wide">
+                        <h2 className="text-lg font-medium text-slate-100 tracking-wide">
                             【財經數據】
                         </h2>
                     </div>
@@ -346,7 +343,7 @@ export function DashboardClient({ initialData, initialStats, lastUpdatedStr }: D
                     className="max-w-7xl mx-auto mb-6 px-4 md:px-0"
                 >
                     <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 p-4 bg-purple-500/5 border-y border-purple-500/20 backdrop-blur-sm">
-                        <div className="col-span-2 lg:col-span-4 flex items-center gap-2 text-cyan-400 font-bold font-mono text-sm tracking-wider uppercase mb-2">
+                        <div className="col-span-2 lg:col-span-4 flex items-center gap-2 text-cyan-400 font-medium font-mono text-sm tracking-wider uppercase mb-2">
                             <Cpu size={16} />
                             AI &amp; Tech Giants
                         </div>
@@ -417,7 +414,7 @@ export function DashboardClient({ initialData, initialStats, lastUpdatedStr }: D
                     className="max-w-7xl mx-auto mb-6 px-4 md:px-0"
                 >
                     <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 p-4 bg-purple-500/5 border-y border-purple-500/20 backdrop-blur-sm">
-                        <div className="col-span-2 lg:col-span-4 flex items-center gap-2 text-cyan-400 font-bold font-mono text-sm tracking-wider uppercase mb-2">
+                        <div className="col-span-2 lg:col-span-4 flex items-center gap-2 text-cyan-400 font-medium font-mono text-sm tracking-wider uppercase mb-2">
                             <Cpu size={16} />
                             台灣權值
                         </div>
@@ -520,7 +517,7 @@ export function DashboardClient({ initialData, initialStats, lastUpdatedStr }: D
                             <div className="flex items-center justify-between mb-6">
                                 <div className="flex items-center gap-3">
                                     <TrendingUp className="text-cyan-400" size={24} />
-                                    <h2 className="text-xl font-bold text-slate-100 tracking-wide">
+                                    <h2 className="text-xl font-medium text-slate-100 tracking-wide">
                                         分析報告
                                     </h2>
                                 </div>
@@ -538,7 +535,7 @@ export function DashboardClient({ initialData, initialStats, lastUpdatedStr }: D
                                     }
 
                                     return (
-                                        <div className={cn("px-4 py-1.5 rounded-full border text-sm font-bold tracking-wider shadow-[0_0_15px_rgba(0,0,0,0.3)] backdrop-blur-md", sentimentColor)}>
+                                        <div className={cn("px-4 py-1.5 rounded-full border text-sm font-medium tracking-wider shadow-[0_0_15px_rgba(0,0,0,0.3)] backdrop-blur-md", sentimentColor)}>
                                             {sentiment}
                                         </div>
                                     );
@@ -571,7 +568,7 @@ export function DashboardClient({ initialData, initialStats, lastUpdatedStr }: D
                                                 // Check for headers (simple check for lines ending with colon or short lines)
                                                 const isHeader = line.length < 20 && (line.endsWith(':') || line.endsWith('：'));
                                                 if (isHeader) {
-                                                    return <h3 key={i} className="text-cyan-300 font-bold text-lg mt-4 mb-2 border-l-4 border-cyan-500 pl-3">{line}</h3>;
+                                                    return <h3 key={i} className="text-cyan-300 font-medium text-lg mt-4 mb-2 border-l-4 border-cyan-500 pl-3">{line}</h3>;
                                                 }
 
                                                 // Highlight numbers and percentages
@@ -584,7 +581,7 @@ export function DashboardClient({ initialData, initialStats, lastUpdatedStr }: D
                                                             if (/^[$–-]?\d{1,3}(?:,\d{3})*(?:\.\d+)?%?$/.test(part)) {
                                                                 // Color logic based on value direction if possible? 
                                                                 // For now just gold/yellow for data points to stand out against cold background
-                                                                return <span key={j} className="text-amber-400 font-mono font-bold mx-0.5">{part}</span>;
+                                                                return <span key={j} className="text-amber-400 font-mono font-medium mx-0.5">{part}</span>;
                                                             }
                                                             return part;
                                                         })}
@@ -631,31 +628,7 @@ export function DashboardClient({ initialData, initialStats, lastUpdatedStr }: D
     );
 }
 
-function Marquee({ children, speed = 30 }: { children: React.ReactNode, speed?: number }) {
-    return (
-        <div className="overflow-hidden w-full relative group">
-            <div className="absolute left-0 top-0 bottom-0 w-8 z-10 bg-gradient-to-r from-[#050b14]/80 to-transparent pointer-events-none" />
-            <div className="absolute right-0 top-0 bottom-0 w-8 z-10 bg-gradient-to-l from-[#050b14]/80 to-transparent pointer-events-none" />
 
-            <motion.div
-                className="flex gap-4 w-max"
-                animate={{ x: "-50%" }}
-                transition={{
-                    duration: speed,
-                    ease: "linear",
-                    repeat: Infinity
-                }}
-            >
-                <div className="flex gap-4 shrink-0 items-stretch">
-                    {children}
-                </div>
-                <div className="flex gap-4 shrink-0 items-stretch">
-                    {children}
-                </div>
-            </motion.div>
-        </div>
-    );
-}
 
 function IndexItem({ label, data, loading, url }: { label: string, data?: MarketQuote, loading: boolean, url?: string }) {
     if (loading || !data) return (
@@ -672,14 +645,14 @@ function IndexItem({ label, data, loading, url }: { label: string, data?: Market
 
     const content = (
         <div className={cn("flex flex-col items-center justify-center p-3 rounded-xl border backdrop-blur-sm transition-all hover:bg-opacity-80 hover:scale-[1.02]", bgClass)}>
-            <span className="text-base font-bold font-mono text-purple-300/95 tracking-wider mb-1 uppercase">{label}</span>
+            <span className="text-base font-medium font-mono text-purple-300/95 tracking-wider mb-1 uppercase">{label}</span>
             <div className="flex items-baseline gap-2">
                 {/* Font size reduced by ~40% (text-lg -> text-sm/base) */}
-                <span className="text-sm font-bold font-mono text-slate-100 drop-shadow-sm">
+                <span className="text-sm font-normal font-mono text-slate-100 drop-shadow-sm">
                     {data.price.toLocaleString(undefined, { maximumFractionDigits: 2 })}
                 </span>
                 {/* Font size reduced (text-xs -> text-[10px]) */}
-                <span className={cn("text-sm font-mono font-bold flex items-center", colorClass)}>
+                <span className={cn("text-sm font-mono font-normal flex items-center", colorClass)}>
                     {isUp ? '▲' : '▼'} {Math.abs(data.changePercent).toFixed(2)}%
                 </span>
             </div>
@@ -710,14 +683,14 @@ function MacroItem({ label, value, changePercent, loading, url }: { label: strin
 
     const content = (
         <div className="flex flex-col items-center justify-center p-3 rounded-lg border border-purple-500/20 bg-slate-900/40 hover:bg-slate-800/60 hover:border-purple-500/40 transition-all group w-full h-full">
-            <span className="text-base font-bold font-mono text-purple-300/95 uppercase tracking-wider mb-1 text-center flex items-center gap-1 drop-shadow-[0_0_3px_rgba(168,85,247,0.5)]">
+            <span className="text-base font-medium font-mono text-purple-300/95 uppercase tracking-wider mb-1 text-center flex items-center gap-1 drop-shadow-[0_0_3px_rgba(168,85,247,0.5)]">
                 {label}
             </span>
-            <span className="text-xl font-bold font-mono tracking-tight text-slate-100 group-hover:text-white transition-colors">
+            <span className="text-xl font-normal font-mono tracking-tight text-slate-100 group-hover:text-white transition-colors">
                 {value}
             </span>
             {changePercent !== undefined && (
-                <span className={cn("text-sm font-bold font-mono mt-0.5", trendColor)}>
+                <span className={cn("text-sm font-normal font-mono mt-0.5", trendColor)}>
                     {isUp ? '▲' : '▼'} {Math.abs(changePercent).toFixed(2)}%
                 </span>
             )}
