@@ -208,30 +208,32 @@ export function DashboardClient({ initialData, initialStats, lastUpdatedStr }: D
                     transition={{ delay: 0.05 }}
                     className="max-w-7xl mx-auto mb-6 px-4 md:px-0"
                 >
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3 p-4 border-y border-purple-500/20 backdrop-blur-sm overflow-hidden">
-                        <div className="col-span-2 md:col-span-4 flex items-center gap-2 text-cyan-400 font-medium font-mono text-sm tracking-wider uppercase mb-4 px-2">
+                    <div className="flex flex-col gap-2 p-4 border-y border-purple-500/20 backdrop-blur-sm overflow-hidden">
+                        <div className="flex items-center gap-2 text-cyan-400 font-medium font-mono text-sm tracking-wider uppercase mb-4 px-2">
                             <TrendingUp size={16} />
                             主要股市指數
                         </div>
 
-                        {[
-                            { label: "費半指數", data: stats?.sox, url: "https://finance.yahoo.com/quote/%5ESOX" },
-                            { label: "S&P 500", data: stats?.sp500Index, url: "https://finance.yahoo.com/quote/%5EGSPC" },
-                            { label: "納斯達克", data: stats?.nasdaqComposite, url: "https://finance.yahoo.com/quote/%5EIXIC" },
-                            { label: "道瓊工業", data: stats?.dji, url: "https://finance.yahoo.com/quote/YM=F" },
-                            { label: "台股加權", data: stats?.twii, url: "https://finance.yahoo.com/quote/%5ETWII" },
-                            { label: "櫃買指數", data: stats?.otc, url: "https://finance.yahoo.com/quote/%5ETWO" },
-                            { label: "日經指數", data: stats?.nikkei225, url: "https://finance.yahoo.com/quote/%5EN225" },
-                            { label: "韓國綜合", data: stats?.kospi, url: "https://finance.yahoo.com/quote/%5EKS11" },
-                        ].map((item, idx) => (
-                            <IndexItem
-                                key={idx}
-                                label={item.label}
-                                data={item.data}
-                                loading={loading}
-                                url={item.url}
-                            />
-                        ))}
+                        <div className="space-y-2">
+                            {[
+                                { label: "費半指數", data: stats?.sox, url: "https://finance.yahoo.com/quote/%5ESOX" },
+                                { label: "S&P 500", data: stats?.sp500Index, url: "https://finance.yahoo.com/quote/%5EGSPC" },
+                                { label: "納斯達克", data: stats?.nasdaqComposite, url: "https://finance.yahoo.com/quote/%5EIXIC" },
+                                { label: "道瓊工業", data: stats?.dji, url: "https://finance.yahoo.com/quote/YM=F" },
+                                { label: "台股加權", data: stats?.twii, url: "https://finance.yahoo.com/quote/%5ETWII" },
+                                { label: "櫃買指數", data: stats?.otc, url: "https://finance.yahoo.com/quote/%5ETWO" },
+                                { label: "日經指數", data: stats?.nikkei225, url: "https://finance.yahoo.com/quote/%5EN225" },
+                                { label: "韓國綜合", data: stats?.kospi, url: "https://finance.yahoo.com/quote/%5EKS11" },
+                            ].map((item, idx) => (
+                                <IndexListItem
+                                    key={idx}
+                                    label={item.label}
+                                    data={item.data}
+                                    loading={loading}
+                                    url={item.url}
+                                />
+                            ))}
+                        </div>
                     </div>
                 </motion.div>
 
