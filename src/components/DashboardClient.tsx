@@ -524,10 +524,10 @@ export function DashboardClient({ initialData, initialStats, lastUpdatedStr }: D
                         <div className="absolute bottom-0 left-0 w-40 h-40 bg-blue-500/10 rounded-full blur-2xl translate-y-20 -translate-x-20" />
 
                         <div className="relative z-10">
-                            <div className="flex items-center justify-between mb-6">
-                                <div className="flex items-center gap-3">
-                                    <TrendingUp className="text-cyan-400" size={24} />
-                                    <h2 className="text-xl font-medium text-slate-100 tracking-wide">
+                            <div className="flex flex-col items-start gap-4 mb-6">
+                                <div className="flex items-center gap-3 text-cyan-400">
+                                    <TrendingUp size={24} />
+                                    <h2 className="text-xl font-medium text-slate-100 tracking-wide whitespace-nowrap">
                                         分析報告
                                     </h2>
                                 </div>
