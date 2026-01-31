@@ -569,32 +569,75 @@ export function DashboardClient({ initialData, initialStats, lastUpdatedStr }: D
                                         </p>
                                     );
 
-                                    // Simple formatter to highlight numbers and keywords
+                                    // Helper function to parse bold text and numbers
+                                    const parseContent = (text: string) => {
+                                        // First split by bold syntax (**text**)
+                                        const segments = text.split(/(\*\*.*?\*\*)/g);
+
+                                        return segments.map((segment, i) => {
+                                            // Handle Bold
+                                            if (segment.startsWith('**') && segment.endsWith('**')) {
+                                                const content = segment.slice(2, -2);
+                                                return (
+                                                    <span key={i} className="text-cyan-200 font-bold mx-0.5">
+                                                        {content}
+                                                    </span>
+                                                );
+                                            }
+
+                                            // Handle Numbers in regular text
+                                            const parts = segment.split(/([$–-]?\d{1,3}(?:,\d{3})*(?:\.\d+)?%?)/g);
+                                            return (
+                                                <span key={i}>
+                                                    {parts.map((part, j) => {
+                                                        if (/^[$–-]?\d{1,3}(?:,\d{3})*(?:\.\d+)?%?$/.test(part)) {
+                                                            return <span key={j} className="text-amber-400 font-mono font-medium mx-0.5">{part}</span>;
+                                                        }
+                                                        return part;
+                                                    })}
+                                                </span>
+                                            );
+                                        });
+                                    };
+
                                     return (
                                         <div className="space-y-4 text-base leading-relaxed tracking-wide text-slate-200">
                                             {aiSummary.split('\n').map((line, i) => {
-                                                if (!line.trim()) return <br key={i} />;
+                                                const trimmedLine = line.trim();
+                                                if (!trimmedLine) return <br key={i} />;
 
-                                                // Check for headers (simple check for lines ending with colon or short lines)
-                                                const isHeader = line.length < 20 && (line.endsWith(':') || line.endsWith('：'));
-                                                if (isHeader) {
-                                                    return <h3 key={i} className="text-cyan-300 font-medium text-lg mt-4 mb-2 border-l-4 border-cyan-500 pl-3">{line}</h3>;
+                                                // 1. Handle Headers (Markdown # or ## or lines ending in :)
+                                                const headerMatch = trimmedLine.match(/^(#{1,6})\s+(.*)/);
+                                                const isHeuristicHeader = trimmedLine.length < 30 && (trimmedLine.endsWith(':') || trimmedLine.endsWith('：'));
+
+                                                if (headerMatch || isHeuristicHeader) {
+                                                    const content = headerMatch ? headerMatch[2] : trimmedLine;
+                                                    // Clean stars from headers if they exist
+                                                    const cleanContent = content.replace(/\*\*/g, '');
+                                                    return (
+                                                        <h3 key={i} className="text-cyan-300 font-medium text-lg mt-5 mb-2 border-l-4 border-cyan-500 pl-3">
+                                                            {cleanContent}
+                                                        </h3>
+                                                    );
                                                 }
 
-                                                // Highlight numbers and percentages
-                                                const parts = line.split(/([$–-]?\d{1,3}(?:,\d{3})*(?:\.\d+)?%?)/g);
+                                                // 2. Handle List Items (* or -)
+                                                const listMatch = trimmedLine.match(/^[\-\*]\s+(.*)/);
+                                                if (listMatch) {
+                                                    return (
+                                                        <div key={i} className="flex gap-2 pl-1 mb-1">
+                                                            <span className="text-cyan-500 mt-1.5 shrink-0">•</span>
+                                                            <p className="text-justify">
+                                                                {parseContent(listMatch[1])}
+                                                            </p>
+                                                        </div>
+                                                    );
+                                                }
 
+                                                // 3. Standard Paragraph
                                                 return (
-                                                    <p key={i} className="text-justify">
-                                                        {parts.map((part, j) => {
-                                                            // Check if part is a number/percentage
-                                                            if (/^[$–-]?\d{1,3}(?:,\d{3})*(?:\.\d+)?%?$/.test(part)) {
-                                                                // Color logic based on value direction if possible? 
-                                                                // For now just gold/yellow for data points to stand out against cold background
-                                                                return <span key={j} className="text-amber-400 font-mono font-medium mx-0.5">{part}</span>;
-                                                            }
-                                                            return part;
-                                                        })}
+                                                    <p key={i} className="text-justify mb-2">
+                                                        {parseContent(trimmedLine)}
                                                     </p>
                                                 );
                                             })}
