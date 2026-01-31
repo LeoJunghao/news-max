@@ -634,9 +634,12 @@ export function DashboardClient({ initialData, initialStats, lastUpdatedStr }: D
 
 function IndexListItem({ label, data, loading, url }: { label: string, data?: MarketQuote, loading: boolean, url?: string }) {
     if (loading || !data) return (
-        <div className="flex items-center justify-between p-3 rounded-lg bg-slate-900/50 border border-slate-800 animate-pulse h-[50px]">
-            <div className="h-3 w-24 bg-slate-800 rounded"></div>
-            <div className="h-4 w-16 bg-slate-800/50 rounded"></div>
+        <div className="flex flex-col justify-center p-3 rounded-lg bg-slate-900/50 border border-slate-800 animate-pulse h-[70px]">
+            <div className="h-3 w-24 bg-slate-800 rounded mb-2"></div>
+            <div className="flex justify-between w-full">
+                <div className="h-4 w-16 bg-slate-800/50 rounded"></div>
+                <div className="h-4 w-12 bg-slate-800/50 rounded"></div>
+            </div>
         </div>
     );
 
@@ -645,13 +648,17 @@ function IndexListItem({ label, data, loading, url }: { label: string, data?: Ma
     const bgClass = 'bg-slate-950 border-purple-500/20 hover:bg-slate-900/80 transition-colors';
 
     const content = (
-        <div className={cn("flex items-center justify-between p-3 rounded-lg border backdrop-blur-sm", bgClass)}>
-            <span className="text-sm font-medium font-mono text-purple-300/95 tracking-wider uppercase">{label}</span>
-            <div className="flex items-center gap-4">
-                <span className="text-sm font-normal font-mono text-slate-100">
+        <div className={cn("flex flex-col p-3 rounded-lg border backdrop-blur-sm", bgClass)}>
+            {/* Row 1: Label */}
+            <div className="mb-1">
+                <span className="text-sm font-medium font-mono text-purple-300/95 tracking-wider uppercase">{label}</span>
+            </div>
+            {/* Row 2: Values */}
+            <div className="flex items-end justify-between">
+                <span className="text-lg font-normal font-mono text-slate-100 leading-none">
                     {data.price.toLocaleString(undefined, { maximumFractionDigits: 2 })}
                 </span>
-                <span className={cn("text-sm font-mono font-normal flex items-center min-w-[80px] justify-end", colorClass)}>
+                <span className={cn("text-sm font-mono font-normal flex items-center leading-none", colorClass)}>
                     {isUp ? '▲' : '▼'} {Math.abs(data.changePercent).toFixed(2)}%
                 </span>
             </div>
