@@ -167,35 +167,37 @@ export function DashboardClient({ initialData, initialStats, lastUpdatedStr }: D
                     transition={{ delay: 0.05 }}
                     className="max-w-7xl mx-auto mb-6 px-4 md:px-0"
                 >
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3 p-4 border-y border-cyan-500/20 backdrop-blur-sm bg-cyan-950/10">
-                        <div className="col-span-2 md:col-span-4 flex items-center gap-2 text-cyan-400 font-medium font-mono text-sm tracking-wider uppercase mb-2">
+                    <div className="flex flex-col gap-2 p-4 border-y border-cyan-500/20 backdrop-blur-sm bg-cyan-950/10">
+                        <div className="flex items-center gap-2 text-cyan-400 font-medium font-mono text-sm tracking-wider uppercase mb-2 px-2">
                             <Zap size={16} />
                             期貨指數
                         </div>
-                        <IndexItem
-                            label="標普500期貨"
-                            data={stats?.sp500}
-                            loading={loading}
-                            url="https://finance.yahoo.com/quote/ES=F"
-                        />
-                        <IndexItem
-                            label="那斯達克100期"
-                            data={stats?.nasdaq}
-                            loading={loading}
-                            url="https://finance.yahoo.com/quote/NQ=F"
-                        />
-                        <IndexItem
-                            label="道瓊期指"
-                            data={stats?.dji}
-                            loading={loading}
-                            url="https://finance.yahoo.com/quote/YM=F"
-                        />
-                        <IndexItem
-                            label="台指期"
-                            data={stats?.tx}
-                            loading={loading}
-                            url="https://finance.yahoo.com/quote/WTX=F"
-                        />
+                        <div className="space-y-2">
+                            <IndexListItem
+                                label="標普500期貨"
+                                data={stats?.sp500}
+                                loading={loading}
+                                url="https://finance.yahoo.com/quote/ES=F"
+                            />
+                            <IndexListItem
+                                label="那斯達克100期"
+                                data={stats?.nasdaq}
+                                loading={loading}
+                                url="https://finance.yahoo.com/quote/NQ=F"
+                            />
+                            <IndexListItem
+                                label="道瓊期指"
+                                data={stats?.dji}
+                                loading={loading}
+                                url="https://finance.yahoo.com/quote/YM=F"
+                            />
+                            <IndexListItem
+                                label="台指期"
+                                data={stats?.tx}
+                                loading={loading}
+                                url="https://finance.yahoo.com/quote/WTX=F"
+                            />
+                        </div>
                     </div>
                 </motion.div>
 
@@ -629,6 +631,42 @@ export function DashboardClient({ initialData, initialStats, lastUpdatedStr }: D
 }
 
 
+
+function IndexListItem({ label, data, loading, url }: { label: string, data?: MarketQuote, loading: boolean, url?: string }) {
+    if (loading || !data) return (
+        <div className="flex items-center justify-between p-3 rounded-lg bg-slate-900/50 border border-slate-800 animate-pulse h-[50px]">
+            <div className="h-3 w-24 bg-slate-800 rounded"></div>
+            <div className="h-4 w-16 bg-slate-800/50 rounded"></div>
+        </div>
+    );
+
+    const isUp = data.changePercent >= 0;
+    const colorClass = isUp ? 'text-red-400' : 'text-green-400';
+    const bgClass = 'bg-slate-950 border-purple-500/20 hover:bg-slate-900/80 transition-colors';
+
+    const content = (
+        <div className={cn("flex items-center justify-between p-3 rounded-lg border backdrop-blur-sm", bgClass)}>
+            <span className="text-sm font-medium font-mono text-purple-300/95 tracking-wider uppercase">{label}</span>
+            <div className="flex items-center gap-4">
+                <span className="text-sm font-normal font-mono text-slate-100">
+                    {data.price.toLocaleString(undefined, { maximumFractionDigits: 2 })}
+                </span>
+                <span className={cn("text-sm font-mono font-normal flex items-center min-w-[80px] justify-end", colorClass)}>
+                    {isUp ? '▲' : '▼'} {Math.abs(data.changePercent).toFixed(2)}%
+                </span>
+            </div>
+        </div>
+    );
+
+    if (url) {
+        return (
+            <a href={url} target="_blank" rel="noopener noreferrer" className="block w-full">
+                {content}
+            </a>
+        );
+    }
+    return content;
+}
 
 function IndexItem({ label, data, loading, url }: { label: string, data?: MarketQuote, loading: boolean, url?: string }) {
     if (loading || !data) return (
