@@ -178,7 +178,62 @@ async function getDJI(): Promise<MarketQuote> { return getYahooQuote('YM=F'); }
 async function getNasdaq(): Promise<MarketQuote> { return getYahooQuote('NQ=F'); } // Nasdaq 100 Futures
 async function getNasdaqComposite(): Promise<MarketQuote> { return getYahooQuote('%5EIXIC'); } // Nasdaq Composite
 async function getTWII(): Promise<MarketQuote> { return getYahooQuote('%5ETWII'); }
+// Helper to getting Fugle TX Data
+async function getFugleTX(): Promise<MarketQuote | null> {
+    const apiKey = process.env.FUGLE_API_KEY;
+    if (!apiKey) return null;
+
+    try {
+        // 1. Get list of TXF contracts to find the active one (Near month)
+        // Filtering for FUTURE, TAIFEX, and TXF product
+        const listRes = await fetch('https://api.fugle.tw/marketdata/v1.0/futopt/intraday/tickers?type=FUTURE&exchange=TAIFEX&symbol=TXF', {
+            headers: { 'X-API-KEY': apiKey },
+            next: { revalidate: 300 } // Revalidate list every 5 mins
+        });
+
+        if (!listRes.ok) return null;
+
+        const listData = await listRes.json();
+        // Sort by symbol to find the nearest date (e.g. TXF202402 < TXF202403)
+        // Filter for "Regular" contracts (Standard active contracts usually strictly follow TXF+YM format)
+        // We look for standard length symbols to avoid spreads if formatted differently, 
+        // though usually standard contracts are just 3 chars + YearMonth (+opt Day)
+        const contracts = (listData.data || [])
+            .map((c: any) => c.symbol)
+            .sort();
+
+        if (contracts.length === 0) return null;
+
+        const activeSymbol = contracts[0]; // Pick the nearest month
+
+        // 2. Get Quote for the active symbol
+        const quoteRes = await fetch(`https://api.fugle.tw/marketdata/v1.0/futopt/intraday/quote/${activeSymbol}`, {
+            headers: { 'X-API-KEY': apiKey },
+            next: { revalidate: 30 }
+        });
+
+        if (!quoteRes.ok) return null;
+
+        const quoteData = await quoteRes.json();
+        if (!quoteData.lastPrice) return null;
+
+        const price = quoteData.lastPrice;
+        const changePercent = quoteData.changePercent || 0;
+
+        return { price, changePercent };
+
+    } catch (e) {
+        console.error("Fugle API Error:", e);
+        return null; // Fallback
+    }
+}
+
 async function getTX(): Promise<MarketQuote> {
+    // 1. Try Fugle API First
+    const fugleData = await getFugleTX();
+    if (fugleData) return fugleData;
+
+    // 2. Fallback to Yahoo Scrape
     try {
         const res = await fetch('https://tw.stock.yahoo.com/future/WTX&', { next: { revalidate: 30 } });
         if (!res.ok) return { price: 0, changePercent: 0 };
