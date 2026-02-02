@@ -867,8 +867,8 @@ function RealtimeIndexListItem({
 function InstitutionalRow({ data }: { data: InstitutionalStats }) {
     const Item = ({ label, value }: { label: string, value: number }) => (
         <div className="flex items-center justify-between w-full">
-            <span className="text-gray-400 text-[16px]">{label}</span>
-            <span className={`font-mono font-bold text-[20px] ${value > 0 ? 'text-red-400' : value < 0 ? 'text-green-400' : 'text-gray-400'}`}>
+            <span className="text-gray-400 text-[20px]">{label}</span>
+            <span className={`font-mono font-bold text-[18px] ${value > 0 ? 'text-red-400' : value < 0 ? 'text-green-400' : 'text-gray-400'}`}>
                 {value > 0 ? '+' : ''}{value}億
             </span>
         </div>
