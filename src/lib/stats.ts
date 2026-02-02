@@ -146,9 +146,9 @@ async function getGoldPrice(): Promise<MarketQuote> {
     return getYahooQuote('GC=F');
 }
 
-// New: Spot Gold Price (XAUUSD=X)
+// New: Spot Gold Price (Source: CNBC XAU=)
 async function getSpotGoldPrice(): Promise<MarketQuote> {
-    return getYahooQuote('XAUUSD=X');
+    return getCNBCPrice('XAU=', 2000); // 2000 as conservative fallback, though real price is ~4000+ in 2026
 }
 
 // New: Ethereum Price (ETH-USD)

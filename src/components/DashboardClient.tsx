@@ -319,7 +319,7 @@ export function DashboardClient({ initialData, initialStats, lastUpdatedStr }: D
                                 value={`$${stats?.spotGoldPrice?.price.toFixed(1) || '---'}`}
                                 changePercent={stats?.spotGoldPrice?.changePercent}
                                 loading={loading}
-                                url="https://finance.yahoo.com/quote/XAUUSD=X"
+                                url="https://www.cnbc.com/quotes/XAU="
                             />
                             <MacroItem
                                 label="銅價"
