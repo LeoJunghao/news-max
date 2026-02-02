@@ -6,7 +6,7 @@ import { NewsSection } from '@/components/NewsSection';
 import { Gauge } from '@/components/Gauge';
 import type { NewsItem } from '@/lib/news';
 import type { MarketStats, MarketQuote } from '@/lib/stats';
-import type { WantGooItem } from '@/lib/wantgoo';
+
 import { formatNewsForClipboard, cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
 
@@ -681,7 +681,6 @@ export function DashboardClient({ initialData, initialStats, lastUpdatedStr }: D
                     </section>
 
 
-                    <WantGooSection items={stats?.wantGooItems} />
 
                     <div className="text-center text-slate-600 text-sm font-mono mt-10 pt-10 border-t border-slate-800">
                         Sources: CNN, CNBC, Anue, Yahoo Finance, WSJ, Google News • Priority &lt; 12h • Excludes {'>'} 24h
@@ -821,76 +820,3 @@ function MacroItem({ label, value, changePercent, loading, url }: { label: strin
     }
     return content;
 }
-
-function WantGooCard({ item }: { item: WantGooItem }) {
-    const isUp = item.change >= 0;
-    const colorClass = isUp ? 'text-red-400' : 'text-green-400';
-    const bgClass = 'bg-slate-950 border-purple-500/20 hover:bg-slate-900/80 transition-colors';
-
-    return (
-        <a
-            href={`https://www.wantgoo.com/index/${item.id}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="block w-full h-full"
-        >
-            <div className={cn("flex flex-col p-3 rounded-lg border backdrop-blur-sm h-full justify-between transition-all hover:scale-[1.02]", bgClass)}>
-                <div className="mb-1">
-                    <span className="text-sm font-medium font-mono text-purple-300/95 tracking-wider uppercase truncate block" title={item.name}>
-                        {item.name}
-                    </span>
-                </div>
-                <div className="flex items-end justify-between gap-2">
-                    <span className="text-lg font-normal font-mono text-slate-100 leading-none">
-                        {item.price.toLocaleString(undefined, { maximumFractionDigits: 2 })}
-                    </span>
-                    <div className={cn("flex flex-col items-end leading-none bg-slate-900/50 px-1.5 py-1 rounded", colorClass)}>
-                        <span className="text-sm font-mono font-medium">
-                            {isUp ? '▲' : '▼'} {Math.abs(item.change).toFixed(2)}
-                        </span>
-                        <span className="text-[10px] font-mono opacity-80 mt-0.5">
-                            {isUp ? '+' : '-'}{Math.abs(item.changePercent).toFixed(2)}%
-                        </span>
-                    </div>
-                </div>
-            </div>
-        </a>
-    );
-}
-
-function WantGooSection({ items }: { items?: WantGooItem[] }) {
-    // Debug: Always render to see if it exists
-    // if (!items || items.length === 0) return null; 
-
-    return (
-        <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="max-w-7xl mx-auto px-4 md:px-0 mb-12"
-        >
-            <div className="flex items-center gap-2 mb-4 px-1">
-                <div className="h-6 w-1 bg-purple-500 rounded-full shadow-[0_0_10px_rgba(168,85,247,0.5)]"></div>
-                <h2 className="text-xl font-medium text-slate-100 tracking-wide">
-                    股市概況 (WantGoo)
-                </h2>
-                <a href="https://www.wantgoo.com/" target="_blank" rel="noopener noreferrer" className="text-xs text-slate-500 font-mono mt-1 ml-2 hover:text-cyan-400 transition-colors">
-                    Source: WantGoo.com
-                </a>
-            </div>
-
-            {(!items || items.length === 0) ? (
-                <div className="p-4 rounded-lg border border-red-500/50 bg-red-900/20 text-red-200 text-center font-mono">
-                    ⚠️ WantGoo Data Unavailable (Items: {items ? items.length : 'undefined'})
-                </div>
-            ) : (
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-                    {items.map((item) => (
-                        <WantGooCard key={item.id} item={item} />
-                    ))}
-                </div>
-            )}
-        </motion.div>
-    );
-}
-
