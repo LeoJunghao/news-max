@@ -223,28 +223,17 @@ export function DashboardClient({ initialData, initialStats, lastUpdatedStr }: D
                                 { label: "納斯達克", data: stats?.nasdaqComposite, url: "https://finance.yahoo.com/quote/%5EIXIC" },
                                 { label: "道瓊工業", data: stats?.dji, url: "https://finance.yahoo.com/quote/YM=F" },
                                 { label: "台股加權", data: stats?.twii, url: "https://finance.yahoo.com/quote/%5ETWII" },
-                                { label: "櫃買指數", data: stats?.otc, url: "https://tw.stock.yahoo.com/quote/%5ETWO", isRealtime: true, apiPath: '/api/quote/otc' },
+
                                 { label: "日經指數", data: stats?.nikkei225, url: "https://finance.yahoo.com/quote/%5EN225" },
                                 { label: "韓國綜合", data: stats?.kospi, url: "https://finance.yahoo.com/quote/%5EKS11" },
                             ].map((item, idx) => (
-                                item.isRealtime ? (
-                                    <RealtimeIndexListItem
-                                        key={idx}
-                                        label={item.label}
-                                        initialData={item.data}
-                                        url={item.url}
-                                        apiPath={item.apiPath!}
-                                        refreshInterval={30000}
-                                    />
-                                ) : (
-                                    <IndexListItem
-                                        key={idx}
-                                        label={item.label}
-                                        data={item.data}
-                                        loading={loading}
-                                        url={item.url}
-                                    />
-                                )
+                                <IndexListItem
+                                    key={idx}
+                                    label={item.label}
+                                    data={item.data}
+                                    loading={loading}
+                                    url={item.url}
+                                />
                             ))}
                         </div>
                     </div>

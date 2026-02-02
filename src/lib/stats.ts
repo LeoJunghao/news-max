@@ -56,7 +56,7 @@ export interface MarketStats {
     quanta: MarketQuote; // 2382
     delta: MarketQuote; // 2308
     fubon: MarketQuote; // 2881
-    otc: MarketQuote; // Yahoo TW Scraper (^TWO)
+    otc: MarketQuote; // ^TWO
     nikkei225: MarketQuote; // ^N225
     kospi: MarketQuote; // ^KS11
 }
@@ -336,39 +336,7 @@ async function getMediaTek(): Promise<MarketQuote> { return getYahooQuote('2454.
 async function getQuanta(): Promise<MarketQuote> { return getYahooQuote('2382.TW'); }
 async function getDelta(): Promise<MarketQuote> { return getYahooQuote('2308.TW'); }
 async function getFubon(): Promise<MarketQuote> { return getYahooQuote('2881.TW'); }
-export async function getOTC(): Promise<MarketQuote> {
-    try {
-        const res = await fetch('https://tw.stock.yahoo.com/quote/^TWO', {
-            next: { revalidate: 30 },
-            headers: {
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.0.0 Safari/537.36'
-            }
-        });
-        if (!res.ok) return { price: 0, changePercent: 0 };
-
-        const text = await res.text();
-
-        // 1. Get Price
-        const priceMatch = text.match(/class="Fz\(32px\)[^>]*>([0-9,]+\.?[0-9]*)<\/span>/);
-        const price = priceMatch ? parseFloat(priceMatch[1].replace(/,/g, '')) : 0;
-
-        // 2. Get Change Percent
-        let changePercent = 0;
-        if (priceMatch) {
-            const context = text.substring(priceMatch.index!, priceMatch.index! + 1500);
-            const pctMatch = context.match(/>\(?([+\-]?[0-9,]+\.?[0-9]*)%\)?<\/span>/);
-            if (pctMatch) {
-                changePercent = parseFloat(pctMatch[1].replace(/,/g, ''));
-            }
-        }
-
-        return { price, changePercent };
-
-    } catch (e) {
-        console.error('OTC Scrape Error', e);
-        return { price: 0, changePercent: 0 };
-    }
-}
+async function getOTC(): Promise<MarketQuote> { return getYahooQuote('^TWO'); }
 async function getNikkei225(): Promise<MarketQuote> { return getYahooQuote('^N225'); }
 async function getKOSPI(): Promise<MarketQuote> { return getYahooQuote('^KS11'); }
 
