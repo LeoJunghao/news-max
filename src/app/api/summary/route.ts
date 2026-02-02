@@ -77,6 +77,8 @@ export async function POST(request: Request) {
 
         // Expanded Robust Fallback Strategy
         const modelCandidates = [
+            "gemini-3.0-pro",       // Potential new version
+            "gemini-3.0-flash",
             "gemini-2.5-pro",       // User's key has access to bleeding edge!
             "gemini-2.5-flash",
             "gemini-2.0-flash",     // Very stable and fast
