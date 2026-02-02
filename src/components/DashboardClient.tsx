@@ -866,22 +866,22 @@ function RealtimeIndexListItem({
 
 function InstitutionalRow({ data }: { data: InstitutionalStats }) {
     const Item = ({ label, value }: { label: string, value: number }) => (
-        <div className="flex items-center gap-2 text-xs md:text-sm">
-            <span className="text-gray-400">{label}</span>
-            <span className={`font-mono font-bold ${value > 0 ? 'text-red-400' : value < 0 ? 'text-green-400' : 'text-gray-400'}`}>
+        <div className="flex items-center justify-between w-full">
+            <span className="text-gray-400 text-[16px]">{label}</span>
+            <span className={`font-mono font-bold text-[20px] ${value > 0 ? 'text-red-400' : value < 0 ? 'text-green-400' : 'text-gray-400'}`}>
                 {value > 0 ? '+' : ''}{value}億
             </span>
         </div>
     );
 
     return (
-        <div className="flex flex-wrap items-center justify-between gap-4 px-4 py-3 bg-white/5 border-t border-dashed border-gray-700/50">
-            <div className="flex items-center gap-4">
+        <div className="flex flex-col gap-3 px-4 py-3 bg-white/5 border-t border-dashed border-gray-700/50">
+            <div className="flex flex-col gap-2 w-full">
                 <Item label="外資" value={data.foreign} />
                 <Item label="投信" value={data.trust} />
                 <Item label="自營" value={data.dealer} />
             </div>
-            <div className="text-xs text-gray-500 font-mono">
+            <div className="text-xs text-gray-500 font-mono text-right mt-1">
                 {data.date} (TWSE)
             </div>
         </div>
