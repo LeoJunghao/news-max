@@ -628,7 +628,7 @@ export function DashboardClient({ initialData, initialStats, lastUpdatedStr }: D
                                                     // Clean stars from headers if they exist
                                                     const cleanContent = content.replace(/\*\*/g, '');
                                                     return (
-                                                        <h3 key={i} className="text-cyan-300 font-medium text-lg mt-5 mb-2 border-l-4 border-cyan-500 pl-3">
+                                                        <h3 key={i} className="text-cyan-300 font-medium text-lg mt-3 mb-1 border-l-3 border-cyan-500 pl-2">
                                                             {cleanContent}
                                                         </h3>
                                                     );
@@ -639,9 +639,9 @@ export function DashboardClient({ initialData, initialStats, lastUpdatedStr }: D
                                                 const listMatch = trimmedLine.match(/^[\-\*•]\s+(.*)/);
                                                 if (listMatch) {
                                                     return (
-                                                        <div key={i} className="flex gap-3 pl-2 mb-2 group/list-item">
-                                                            <span className="text-cyan-500 mt-1.5 shrink-0 text-lg leading-none opacity-80 group-hover/list-item:opacity-100 transition-opacity">•</span>
-                                                            <p className="text-justify leading-relaxed text-slate-300">
+                                                        <div key={i} className="flex gap-2 pl-1 mb-1 group/list-item">
+                                                            <span className="text-cyan-500 mt-1 shrink-0 text-base leading-none opacity-80 group-hover/list-item:opacity-100 transition-opacity">•</span>
+                                                            <p className="text-justify leading-snug text-slate-300 text-sm md:text-base">
                                                                 {parseContent(listMatch[1])}
                                                             </p>
                                                         </div>
@@ -650,7 +650,7 @@ export function DashboardClient({ initialData, initialStats, lastUpdatedStr }: D
 
                                                 // 3. Standard Paragraph
                                                 return (
-                                                    <p key={i} className="text-justify mb-2">
+                                                    <p key={i} className="text-justify mb-1 leading-snug text-slate-300 text-sm md:text-base">
                                                         {parseContent(trimmedLine)}
                                                     </p>
                                                 );
