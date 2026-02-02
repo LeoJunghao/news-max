@@ -37,7 +37,7 @@ export interface MarketStats {
     nasdaq: MarketQuote;
     nasdaqComposite: MarketQuote; // New: ^IXIC
     twii: MarketQuote;
-    // tx: MarketQuote; // Removed
+    tx: MarketQuote; // New: Taiwan Futures (Yahoo WTX&)
     // New Pro Stats
     usdtwd: MarketQuote;
     usdjpy: MarketQuote; // New
@@ -190,8 +190,46 @@ async function getDJI(): Promise<MarketQuote> { return getYahooQuote('YM=F'); }
 async function getNasdaq(): Promise<MarketQuote> { return getYahooQuote('NQ=F'); } // Nasdaq 100 Futures
 async function getNasdaqComposite(): Promise<MarketQuote> { return getYahooQuote('%5EIXIC'); } // Nasdaq Composite
 async function getTWII(): Promise<MarketQuote> { return getYahooQuote('%5ETWII'); }
-// Helper to getting Fugle TX Data
-// getFugleTX and getTX removed
+
+// Scrape Yahoo TW for Taiwan Futures (WTX&)
+async function getTX(): Promise<MarketQuote> {
+    try {
+        const res = await fetch('https://tw.stock.yahoo.com/future/WTX&', {
+            next: { revalidate: 30 },
+            headers: {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.0.0 Safari/537.36'
+            }
+        });
+        if (!res.ok) return { price: 0, changePercent: 0 };
+
+        const text = await res.text();
+
+        // 1. Get Price
+        // Regex: class="Fz(32px)...">32,577.00</span>
+        const priceMatch = text.match(/class="Fz\(32px\)[^>]*>([0-9,]+\.?[0-9]*)<\/span>/);
+        const price = priceMatch ? parseFloat(priceMatch[1].replace(/,/g, '')) : 0;
+
+        // 2. Get Change Percent
+        // Look for the percentage span that typically follows the price or change amount
+        // Pattern: >-0.45%</span> or >+1.23%</span>
+        // We limit search to the context after price to avoid finding other percentages on page
+        let changePercent = 0;
+        if (priceMatch) {
+            const context = text.substring(priceMatch.index!, priceMatch.index! + 1500);
+            // Matches >+1.23%</span> or >-1.23%</span> or >0.00%</span>
+            const pctMatch = context.match(/>([+\-]?[0-9,]+\.?[0-9]*)%<\/span>/);
+            if (pctMatch) {
+                changePercent = parseFloat(pctMatch[1].replace(/,/g, ''));
+            }
+        }
+
+        return { price, changePercent };
+
+    } catch (e) {
+        console.error('TX Scrape Error', e);
+        return { price: 0, changePercent: 0 };
+    }
+}
 
 // 2. Crypto Fear & Greed
 async function getCryptoFnG(): Promise<number> {
@@ -296,7 +334,7 @@ async function getNikkei225(): Promise<MarketQuote> { return getYahooQuote('^N22
 async function getKOSPI(): Promise<MarketQuote> { return getYahooQuote('^KS11'); }
 
 export async function getMarketStats(): Promise<MarketStats> {
-    const [vix, cryptoData, us10Y, us2Y, spread, dxy, brent, goldPrice, spotGoldPrice, copper, bitcoin, ethereum, bdi, crb, sox, sp500, sp500Index, dji, nasdaq, nasdaqComposite, twii, usdtwd, usdjpy, tsmAdr, tsmTw, nvda, msft, mu, meta, googl, amd, aapl, foxconn, mediatek, quanta, delta, fubon, otc, nikkei225, kospi] = await Promise.all([
+    const [vix, cryptoData, us10Y, us2Y, spread, dxy, brent, goldPrice, spotGoldPrice, copper, bitcoin, ethereum, bdi, crb, sox, sp500, sp500Index, dji, nasdaq, nasdaqComposite, twii, tx, usdtwd, usdjpy, tsmAdr, tsmTw, nvda, msft, mu, meta, googl, amd, aapl, foxconn, mediatek, quanta, delta, fubon, otc, nikkei225, kospi] = await Promise.all([
         getVIX(),
         getCryptoFnG(),
         getUS10Y(),
@@ -318,7 +356,7 @@ export async function getMarketStats(): Promise<MarketStats> {
         getNasdaq(),
         getNasdaqComposite(),
         getTWII(),
-        // getTX(), // Removed
+        getTX(),
         getUSDTWD(),
         getUSDJPY(),
         getTSMADR(),
@@ -369,7 +407,7 @@ export async function getMarketStats(): Promise<MarketStats> {
         nasdaq,
         nasdaqComposite,
         twii,
-        // tx,
+        tx,
         usdtwd,
         usdjpy,
         tsmAdr,

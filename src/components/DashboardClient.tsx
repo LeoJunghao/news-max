@@ -192,7 +192,12 @@ export function DashboardClient({ initialData, initialStats, lastUpdatedStr }: D
                                 loading={loading}
                                 url="https://finance.yahoo.com/quote/YM=F"
                             />
-
+                            <IndexListItem
+                                label="台指期近一"
+                                data={stats?.tx}
+                                loading={loading}
+                                url="https://tw.stock.yahoo.com/future/WTX&"
+                            />
                         </div>
                     </div>
                 </motion.div>
