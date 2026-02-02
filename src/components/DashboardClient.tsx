@@ -222,10 +222,9 @@ export function DashboardClient({ initialData, initialStats, lastUpdatedStr }: D
                                 { label: "S&P 500", data: stats?.sp500Index, url: "https://finance.yahoo.com/quote/%5EGSPC" },
                                 { label: "納斯達克", data: stats?.nasdaqComposite, url: "https://finance.yahoo.com/quote/%5EIXIC" },
                                 { label: "道瓊工業", data: stats?.dji, url: "https://finance.yahoo.com/quote/YM=F" },
-                                { label: "台股加權", data: stats?.twii, url: "https://finance.yahoo.com/quote/%5ETWII" },
-
                                 { label: "日經指數", data: stats?.nikkei225, url: "https://finance.yahoo.com/quote/%5EN225" },
                                 { label: "韓國綜合", data: stats?.kospi, url: "https://finance.yahoo.com/quote/%5EKS11" },
+                                { label: "台股加權", data: stats?.twii, url: "https://finance.yahoo.com/quote/%5ETWII" },
                             ].map((item, idx) => (
                                 <IndexListItem
                                     key={idx}
