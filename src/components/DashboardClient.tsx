@@ -859,14 +859,15 @@ function WantGooCard({ item }: { item: WantGooItem }) {
 }
 
 function WantGooSection({ items }: { items?: WantGooItem[] }) {
-    if (!items || items.length === 0) return null;
+    // Debug: Always render to see if it exists
+    // if (!items || items.length === 0) return null; 
 
     return (
         <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="max-w-7xl mx-auto px-4 md:px-0 mb-12" // Added mb-12 for spacing from footer
+            className="max-w-7xl mx-auto px-4 md:px-0 mb-12"
         >
             <div className="flex items-center gap-2 mb-4 px-1">
                 <div className="h-6 w-1 bg-purple-500 rounded-full shadow-[0_0_10px_rgba(168,85,247,0.5)]"></div>
@@ -878,11 +879,17 @@ function WantGooSection({ items }: { items?: WantGooItem[] }) {
                 </a>
             </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-                {items.map((item) => (
-                    <WantGooCard key={item.id} item={item} />
-                ))}
-            </div>
+            {(!items || items.length === 0) ? (
+                <div className="p-4 rounded-lg border border-red-500/50 bg-red-900/20 text-red-200 text-center font-mono">
+                    ⚠️ WantGoo Data Unavailable (Items: {items ? items.length : 'undefined'})
+                </div>
+            ) : (
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+                    {items.map((item) => (
+                        <WantGooCard key={item.id} item={item} />
+                    ))}
+                </div>
+            )}
         </motion.div>
     );
 }
