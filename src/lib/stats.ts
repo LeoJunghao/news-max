@@ -5,11 +5,17 @@ export interface MarketQuote {
     changePercent: number;
 }
 
+// getYahooQuote is defined locally below
+// import { getYahooQuote, getCNBCPrice } from './yahoo'; 
+import { getWantGooData, WantGooItem } from './wantgoo';
+
 export interface MarketStats {
     vix: number;
     stockFnG: number;
     cryptoFnG: number;
     goldSentiment: number;
+    // ... existing ... 
+    wantGooItems: WantGooItem[]; // New field
     // New Macro Indicators
     us10Y: MarketQuote;
     us2Y: MarketQuote;
@@ -370,7 +376,7 @@ async function getNikkei225(): Promise<MarketQuote> { return getYahooQuote('^N22
 async function getKOSPI(): Promise<MarketQuote> { return getYahooQuote('^KS11'); }
 
 export async function getMarketStats(): Promise<MarketStats> {
-    const [vix, cryptoData, us10Y, us2Y, spread, dxy, brent, goldPrice, spotGoldPrice, copper, bitcoin, ethereum, bdi, crb, sox, sp500, sp500Index, dji, nasdaq, nasdaqComposite, twii, tx, usdtwd, usdjpy, tsmAdr, tsmTw, nvda, msft, mu, meta, googl, amd, aapl, foxconn, mediatek, quanta, delta, fubon, otc, nikkei225, kospi] = await Promise.all([
+    const [vix, cryptoData, us10Y, us2Y, spread, dxy, brent, goldPrice, spotGoldPrice, copper, bitcoin, ethereum, bdi, crb, sox, sp500, sp500Index, dji, nasdaq, nasdaqComposite, twii, tx, usdtwd, usdjpy, tsmAdr, tsmTw, nvda, msft, mu, meta, googl, amd, aapl, foxconn, mediatek, quanta, delta, fubon, otc, nikkei225, kospi, wantGooItems] = await Promise.all([
         getVIX(),
         getCryptoFnG(),
         getUS10Y(),
@@ -411,7 +417,8 @@ export async function getMarketStats(): Promise<MarketStats> {
         getFubon(),
         getOTC(),
         getNikkei225(),
-        getKOSPI()
+        getKOSPI(),
+        getWantGooData()
     ]);
 
     const [stockData, goldData] = await Promise.all([
@@ -462,6 +469,7 @@ export async function getMarketStats(): Promise<MarketStats> {
         fubon,
         otc,
         nikkei225,
-        kospi
+        kospi,
+        wantGooItems
     };
 }
