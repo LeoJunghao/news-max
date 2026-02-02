@@ -196,6 +196,8 @@ export function DashboardClient({ initialData, initialStats, lastUpdatedStr }: D
                                 label="台指期近一"
                                 initialData={stats?.tx}
                                 url="https://tw.stock.yahoo.com/future/WTX&"
+                                apiPath="/api/quote/tx"
+                                refreshInterval={30000}
                             />
                         </div>
                     </div>
@@ -221,17 +223,28 @@ export function DashboardClient({ initialData, initialStats, lastUpdatedStr }: D
                                 { label: "納斯達克", data: stats?.nasdaqComposite, url: "https://finance.yahoo.com/quote/%5EIXIC" },
                                 { label: "道瓊工業", data: stats?.dji, url: "https://finance.yahoo.com/quote/YM=F" },
                                 { label: "台股加權", data: stats?.twii, url: "https://finance.yahoo.com/quote/%5ETWII" },
-                                { label: "櫃買指數", data: stats?.otc, url: "https://finance.yahoo.com/quote/%5ETWO" },
+                                { label: "櫃買指數", data: stats?.otc, url: "https://tw.stock.yahoo.com/quote/%5ETWO", isRealtime: true, apiPath: '/api/quote/otc' },
                                 { label: "日經指數", data: stats?.nikkei225, url: "https://finance.yahoo.com/quote/%5EN225" },
                                 { label: "韓國綜合", data: stats?.kospi, url: "https://finance.yahoo.com/quote/%5EKS11" },
                             ].map((item, idx) => (
-                                <IndexListItem
-                                    key={idx}
-                                    label={item.label}
-                                    data={item.data}
-                                    loading={loading}
-                                    url={item.url}
-                                />
+                                item.isRealtime ? (
+                                    <RealtimeIndexListItem
+                                        key={idx}
+                                        label={item.label}
+                                        initialData={item.data}
+                                        url={item.url}
+                                        apiPath={item.apiPath!}
+                                        refreshInterval={30000}
+                                    />
+                                ) : (
+                                    <IndexListItem
+                                        key={idx}
+                                        label={item.label}
+                                        data={item.data}
+                                        loading={loading}
+                                        url={item.url}
+                                    />
+                                )
                             ))}
                         </div>
                     </div>
@@ -820,13 +833,25 @@ function MacroItem({ label, value, changePercent, loading, url }: { label: strin
     return content;
 }
 
-function RealtimeIndexListItem({ label, initialData, url }: { label: string, initialData?: MarketQuote, url?: string }) {
+function RealtimeIndexListItem({
+    label,
+    initialData,
+    url,
+    apiPath,
+    refreshInterval = 30000
+}: {
+    label: string,
+    initialData?: MarketQuote,
+    url?: string,
+    apiPath: string,
+    refreshInterval?: number
+}) {
     const [data, setData] = useState<MarketQuote | undefined>(initialData);
 
     useEffect(() => {
         const fetchQuote = async () => {
             try {
-                const res = await fetch('/api/quote/tx?t=' + Date.now());
+                const res = await fetch(apiPath + (apiPath.includes('?') ? '&' : '?') + 't=' + Date.now());
                 if (res.ok) {
                     const json = await res.json();
                     if (json && json.price) {
@@ -834,14 +859,13 @@ function RealtimeIndexListItem({ label, initialData, url }: { label: string, ini
                     }
                 }
             } catch (e) {
-                console.error("Failed to poll TX", e);
+                console.error(`Failed to poll ${label}`, e);
             }
         };
 
-        // Poll every 10 seconds
-        const interval = setInterval(fetchQuote, 10000);
+        const interval = setInterval(fetchQuote, refreshInterval);
         return () => clearInterval(interval);
-    }, []);
+    }, [apiPath, label, refreshInterval]);
 
     return <IndexListItem label={label} data={data} loading={!data} url={url} />;
 }
