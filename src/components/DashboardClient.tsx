@@ -192,10 +192,9 @@ export function DashboardClient({ initialData, initialStats, lastUpdatedStr }: D
                                 loading={loading}
                                 url="https://finance.yahoo.com/quote/YM=F"
                             />
-                            <IndexListItem
+                            <RealtimeIndexListItem
                                 label="台指期近一"
-                                data={stats?.tx}
-                                loading={loading}
+                                initialData={stats?.tx}
                                 url="https://tw.stock.yahoo.com/future/WTX&"
                             />
                         </div>
@@ -819,4 +818,30 @@ function MacroItem({ label, value, changePercent, loading, url }: { label: strin
         );
     }
     return content;
+}
+
+function RealtimeIndexListItem({ label, initialData, url }: { label: string, initialData?: MarketQuote, url?: string }) {
+    const [data, setData] = useState<MarketQuote | undefined>(initialData);
+
+    useEffect(() => {
+        const fetchQuote = async () => {
+            try {
+                const res = await fetch('/api/quote/tx?t=' + Date.now());
+                if (res.ok) {
+                    const json = await res.json();
+                    if (json && json.price) {
+                        setData(json);
+                    }
+                }
+            } catch (e) {
+                console.error("Failed to poll TX", e);
+            }
+        };
+
+        // Poll every 10 seconds
+        const interval = setInterval(fetchQuote, 10000);
+        return () => clearInterval(interval);
+    }, []);
+
+    return <IndexListItem label={label} data={data} loading={!data} url={url} />;
 }

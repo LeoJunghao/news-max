@@ -192,7 +192,7 @@ async function getNasdaqComposite(): Promise<MarketQuote> { return getYahooQuote
 async function getTWII(): Promise<MarketQuote> { return getYahooQuote('%5ETWII'); }
 
 // Scrape Yahoo TW for Taiwan Futures (WTX&)
-async function getTX(): Promise<MarketQuote> {
+export async function getTX(): Promise<MarketQuote> {
     try {
         const res = await fetch('https://tw.stock.yahoo.com/future/WTX&', {
             next: { revalidate: 30 },
