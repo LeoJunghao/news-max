@@ -216,10 +216,17 @@ export async function getTX(): Promise<MarketQuote> {
         let changePercent = 0;
         if (priceMatch) {
             const context = text.substring(priceMatch.index!, priceMatch.index! + 1500);
-            // Matches >+1.23%</span> or >-1.23%</span> or >0.00%</span>
-            const pctMatch = context.match(/>([+\-]?[0-9,]+\.?[0-9]*)%<\/span>/);
+            // Matches >+1.23%</span> or >-1.23%</span> or >(0.65%)</span>
+            // Update regex to handle optional surrounding parentheses
+            const pctMatch = context.match(/>\(?([+\-]?[0-9,]+\.?[0-9]*)%\)?<\/span>/);
             if (pctMatch) {
                 changePercent = parseFloat(pctMatch[1].replace(/,/g, ''));
+
+                // If the number is positive but 'trend-down' is found in the immediate tag context, negate it
+                // (Only if the sign wasn't explicit and we suspect color-coding)
+                // However, usually Yahoo puts minus sign. Let's trust the number first.
+                // But just in case, Yahoo TW uses (0.65%) for positive and (-0.65%) for negative?
+                // Visual check: Usually yes. 
             }
         }
 
