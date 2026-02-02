@@ -5,6 +5,13 @@ export interface MarketQuote {
     changePercent: number;
 }
 
+export interface InstitutionalStats {
+    foreign: number; // 外資 (億)
+    trust: number;   // 投信 (億)
+    dealer: number;  // 自營商 (億)
+    date: string;    // 資料日期
+}
+
 // getYahooQuote is defined locally below
 // import { getYahooQuote, getCNBCPrice } from './yahoo'; 
 // import { getWantGooData, WantGooItem } from './wantgoo'; // Removed
@@ -57,6 +64,7 @@ export interface MarketStats {
     delta: MarketQuote; // 2308
     fubon: MarketQuote; // 2881
     otc: MarketQuote; // ^TWO
+    institutional: InstitutionalStats; // TWSE 3 Major Investors
     nikkei225: MarketQuote; // ^N225
     kospi: MarketQuote; // ^KS11
 }
@@ -337,11 +345,68 @@ async function getQuanta(): Promise<MarketQuote> { return getYahooQuote('2382.TW
 async function getDelta(): Promise<MarketQuote> { return getYahooQuote('2308.TW'); }
 async function getFubon(): Promise<MarketQuote> { return getYahooQuote('2881.TW'); }
 async function getOTC(): Promise<MarketQuote> { return getYahooQuote('^TWO'); }
+
+async function getInstitutional(): Promise<InstitutionalStats> {
+    try {
+        // TWSE API: https://www.twse.com.tw/rwd/zh/fund/BFI82U?response=json
+        const res = await fetch('https://www.twse.com.tw/rwd/zh/fund/BFI82U?response=json', {
+            next: { revalidate: 3600 }, // Cache for 1 hour as data updates daily
+            headers: {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+            }
+        });
+
+        if (!res.ok) throw new Error('TWSE API Failed');
+
+        const json = await res.json();
+        // Check status
+        if (json.stat !== 'OK') return { foreign: 0, trust: 0, dealer: 0, date: '' };
+
+        // Data structure: Array of arrays
+        // [ "單位名稱", "買進金額", "賣出金額", "買賣差額" ]
+        // Target rows:
+        // "自營商(自行買賣)"
+        // "自營商(避險)"
+        // "投信"
+        // "外資及陸資(不含外資自營商)"
+
+        let foreign = 0;
+        let trust = 0;
+        let dealerSelf = 0;
+        let dealerHedge = 0;
+
+        json.data.forEach((row: string[]) => {
+            const name = row[0];
+            const netStr = row[3].replace(/,/g, ''); // Remove commas
+            const net = parseFloat(netStr);
+
+            if (name === '外資及陸資(不含外資自營商)') foreign = net;
+            else if (name === '投信') trust = net;
+            else if (name === '自營商(自行買賣)') dealerSelf = net;
+            else if (name === '自營商(避險)') dealerHedge = net;
+        });
+
+        // Convert to Billions (10^8)
+        const toBillion = (val: number) => Math.round((val / 100000000) * 100) / 100;
+
+        return {
+            foreign: toBillion(foreign),
+            trust: toBillion(trust),
+            dealer: toBillion(dealerSelf + dealerHedge),
+            date: json.date // e.g. 20260202
+        };
+
+    } catch (e) {
+        console.error('Institutional Data Error', e);
+        return { foreign: 0, trust: 0, dealer: 0, date: '' };
+    }
+}
+
 async function getNikkei225(): Promise<MarketQuote> { return getYahooQuote('^N225'); }
 async function getKOSPI(): Promise<MarketQuote> { return getYahooQuote('^KS11'); }
 
 export async function getMarketStats(): Promise<MarketStats> {
-    const [vix, cryptoData, us10Y, us2Y, spread, dxy, brent, goldPrice, spotGoldPrice, copper, bitcoin, ethereum, bdi, crb, sox, sp500, sp500Index, dji, nasdaq, nasdaqComposite, twii, tx, usdtwd, usdjpy, tsmAdr, tsmTw, nvda, msft, mu, meta, googl, amd, aapl, foxconn, mediatek, quanta, delta, fubon, otc, nikkei225, kospi] = await Promise.all([
+    const [vix, cryptoData, us10Y, us2Y, spread, dxy, brent, goldPrice, spotGoldPrice, copper, bitcoin, ethereum, bdi, crb, sox, sp500, sp500Index, dji, nasdaq, nasdaqComposite, twii, tx, usdtwd, usdjpy, tsmAdr, tsmTw, nvda, msft, mu, meta, googl, amd, aapl, foxconn, mediatek, quanta, delta, fubon, otc, institutional, nikkei225, kospi] = await Promise.all([
         getVIX(),
         getCryptoFnG(),
         getUS10Y(),
@@ -381,6 +446,7 @@ export async function getMarketStats(): Promise<MarketStats> {
         getDelta(),
         getFubon(),
         getOTC(),
+        getInstitutional(),
         getNikkei225(),
         getKOSPI()
     ]);
@@ -432,6 +498,7 @@ export async function getMarketStats(): Promise<MarketStats> {
         delta,
         fubon,
         otc,
+        institutional,
         nikkei225,
         kospi
     };

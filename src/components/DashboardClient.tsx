@@ -5,7 +5,7 @@ import { RefreshCw, Zap, Copy, TrendingUp, Cpu } from 'lucide-react';
 import { NewsSection } from '@/components/NewsSection';
 import { Gauge } from '@/components/Gauge';
 import type { NewsItem } from '@/lib/news';
-import type { MarketStats, MarketQuote } from '@/lib/stats';
+import type { MarketStats, MarketQuote, InstitutionalStats } from '@/lib/stats';
 
 import { formatNewsForClipboard, cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
@@ -235,6 +235,11 @@ export function DashboardClient({ initialData, initialStats, lastUpdatedStr }: D
                                     url={item.url}
                                 />
                             ))}
+
+                            {/* Institutional Fund Flows (Visible only when data exists) */}
+                            {stats?.institutional && stats.institutional.date && (
+                                <InstitutionalRow data={stats.institutional} />
+                            )}
                         </div>
                     </div>
                 </motion.div>
@@ -857,4 +862,28 @@ function RealtimeIndexListItem({
     }, [apiPath, label, refreshInterval]);
 
     return <IndexListItem label={label} data={data} loading={!data} url={url} />;
+}
+
+function InstitutionalRow({ data }: { data: InstitutionalStats }) {
+    const Item = ({ label, value }: { label: string, value: number }) => (
+        <div className="flex items-center gap-2 text-xs md:text-sm">
+            <span className="text-gray-400">{label}</span>
+            <span className={`font-mono font-bold ${value > 0 ? 'text-red-400' : value < 0 ? 'text-green-400' : 'text-gray-400'}`}>
+                {value > 0 ? '+' : ''}{value}億
+            </span>
+        </div>
+    );
+
+    return (
+        <div className="flex flex-wrap items-center justify-between gap-4 px-4 py-3 bg-white/5 border-t border-dashed border-gray-700/50">
+            <div className="flex items-center gap-4">
+                <Item label="外資" value={data.foreign} />
+                <Item label="投信" value={data.trust} />
+                <Item label="自營" value={data.dealer} />
+            </div>
+            <div className="text-xs text-gray-500 font-mono">
+                {data.date} (TWSE)
+            </div>
+        </div>
+    );
 }
