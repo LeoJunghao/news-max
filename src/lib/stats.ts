@@ -232,25 +232,44 @@ async function getNasdaqComposite(): Promise<MarketQuote> { return getYahooQuote
 async function getTWII(): Promise<MarketQuote> { return getYahooQuote('%5ETWII'); }
 
 // Scrape Yahoo TW for Taiwan Futures (WTX&)
-// 202. WantGoo API for Taiwan Futures (TX)
-import { getWantGooFutures } from './wantgoo';
-
+// Scrape Yahoo TW for Taiwan Futures (WTX&)
 export async function getTX(): Promise<MarketQuote> {
     try {
-        const data = await getWantGooFutures();
-        if (!data) return { price: 0, changePercent: 0 };
+        const res = await fetch('https://tw.stock.yahoo.com/future/WTX&', {
+            next: { revalidate: 30 },
+            headers: {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.0.0 Safari/537.36'
+            }
+        });
+        if (!res.ok) return { price: 0, changePercent: 0 };
 
-        return {
-            price: data.price,
-            changePercent: data.changePercent,
-            // Since this is real-time, high/low are strictly "Day High/Low", not 52-week.
-            // But we can pass them if the UI supports Day Range? 
-            // The MarketQuote interface defines fiftyTwoWeek for AI. 
-            // We shouldn't map DayHigh to 52wHigh to avoid confusion.
-            // We just return price/change for now.
-        };
+        const text = await res.text();
+
+        // 1. Get Price
+        // Regex: class="Fz(32px)...">32,577.00</span>
+        const priceMatch = text.match(/class="Fz\(32px\)[^>]*>([0-9,]+\.?[0-9]*)<\/span>/);
+        const price = priceMatch ? parseFloat(priceMatch[1].replace(/,/g, '')) : 0;
+
+        // 2. Get Change Percent
+        // Look for the percentage span that typically follows the price or change amount
+        // Pattern: >-0.45%</span> or >+1.23%</span>
+        // We limit search to the context after price to avoid finding other percentages on page
+        // Context 1500 chars
+        let changePercent = 0;
+        if (priceMatch) {
+            const context = text.substring(priceMatch.index!, priceMatch.index! + 1500);
+            // Matches >+1.23%</span> or >-1.23%</span> or >(0.65%)</span>
+            // Update regex to handle optional surrounding parentheses
+            const pctMatch = context.match(/>\(?([+\-]?[0-9,]+\.?[0-9]*)%\)?<\/span>/);
+            if (pctMatch) {
+                changePercent = parseFloat(pctMatch[1].replace(/,/g, ''));
+            }
+        }
+
+        return { price, changePercent };
+
     } catch (e) {
-        console.error('TX Scrape Error (WantGoo)', e);
+        console.error('TX Scrape Error', e);
         return { price: 0, changePercent: 0 };
     }
 }
