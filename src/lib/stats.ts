@@ -17,6 +17,7 @@ export interface MarketStats {
     dollarIndex: MarketQuote;
     brentCrude: MarketQuote;
     goldPrice: MarketQuote;
+    spotGoldPrice: MarketQuote; // New: Spot Gold (XAUUSD=X)
     copper: MarketQuote; // New
     bitcoin: MarketQuote;
     ethereum: MarketQuote; // New   // New
@@ -143,6 +144,11 @@ async function getBrentCrude(): Promise<MarketQuote> {
 // New: Gold Price (GC=F)
 async function getGoldPrice(): Promise<MarketQuote> {
     return getYahooQuote('GC=F');
+}
+
+// New: Spot Gold Price (XAUUSD=X)
+async function getSpotGoldPrice(): Promise<MarketQuote> {
+    return getYahooQuote('XAUUSD=X');
 }
 
 // New: Ethereum Price (ETH-USD)
@@ -364,7 +370,7 @@ async function getNikkei225(): Promise<MarketQuote> { return getYahooQuote('^N22
 async function getKOSPI(): Promise<MarketQuote> { return getYahooQuote('^KS11'); }
 
 export async function getMarketStats(): Promise<MarketStats> {
-    const [vix, cryptoData, us10Y, us2Y, spread, dxy, brent, goldPrice, copper, bitcoin, ethereum, bdi, crb, sox, sp500, sp500Index, dji, nasdaq, nasdaqComposite, twii, tx, usdtwd, usdjpy, tsmAdr, tsmTw, nvda, msft, mu, meta, googl, amd, aapl, foxconn, mediatek, quanta, delta, fubon, otc, nikkei225, kospi] = await Promise.all([
+    const [vix, cryptoData, us10Y, us2Y, spread, dxy, brent, goldPrice, spotGoldPrice, copper, bitcoin, ethereum, bdi, crb, sox, sp500, sp500Index, dji, nasdaq, nasdaqComposite, twii, tx, usdtwd, usdjpy, tsmAdr, tsmTw, nvda, msft, mu, meta, googl, amd, aapl, foxconn, mediatek, quanta, delta, fubon, otc, nikkei225, kospi] = await Promise.all([
         getVIX(),
         getCryptoFnG(),
         getUS10Y(),
@@ -373,6 +379,7 @@ export async function getMarketStats(): Promise<MarketStats> {
         getDollarIndex(),
         getBrentCrude(),
         getGoldPrice(),
+        getSpotGoldPrice(),
         getCopperPrice(),
         getBitcoinPrice(),
         getEthereumPrice(),
@@ -423,6 +430,7 @@ export async function getMarketStats(): Promise<MarketStats> {
         dollarIndex: dxy,
         brentCrude: brent,
         goldPrice,
+        spotGoldPrice,
         copper,
         bitcoin,
         ethereum,

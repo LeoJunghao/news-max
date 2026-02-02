@@ -315,6 +315,13 @@ export function DashboardClient({ initialData, initialStats, lastUpdatedStr }: D
                                 url="https://finance.yahoo.com/quote/GC=F"
                             />
                             <MacroItem
+                                label="現貨黃金"
+                                value={`$${stats?.spotGoldPrice?.price.toFixed(1) || '---'}`}
+                                changePercent={stats?.spotGoldPrice?.changePercent}
+                                loading={loading}
+                                url="https://finance.yahoo.com/quote/XAUUSD=X"
+                            />
+                            <MacroItem
                                 label="銅價"
                                 value={`$${stats?.copper?.price.toFixed(2) || '---'}`}
                                 changePercent={stats?.copper?.changePercent}
