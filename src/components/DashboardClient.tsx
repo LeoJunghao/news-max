@@ -304,7 +304,7 @@ export function DashboardClient({ initialData, initialStats, lastUpdatedStr }: D
                                 url="https://finance.yahoo.com/quote/ETH-USD"
                             />
                             <MacroItem
-                                label="黃金價格"
+                                label="黃金期貨"
                                 value={`$${stats?.goldPrice?.price.toFixed(1) || '---'}`}
                                 changePercent={stats?.goldPrice?.changePercent}
                                 loading={loading}
