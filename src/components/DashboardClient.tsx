@@ -718,11 +718,11 @@ function IndexListItem({ label, data, loading, url }: { label: string, data?: Ma
         <div className={cn("flex flex-col p-3 rounded-lg border backdrop-blur-sm", bgClass)}>
             {/* Row 1: Label */}
             <div className="mb-1">
-                <span className="text-sm font-medium font-mono text-purple-300/95 tracking-wider uppercase">{label}</span>
+                <span className="text-base font-medium font-mono text-purple-300/95 tracking-wider uppercase">{label}</span>
             </div>
             {/* Row 2: Values */}
             <div className="flex items-end justify-between">
-                <span className="text-lg font-normal font-mono text-slate-100 leading-none">
+                <span className="text-xl font-normal font-mono text-slate-100 leading-none">
                     {data.price.toLocaleString(undefined, { maximumFractionDigits: 2 })}
                 </span>
                 <span className={cn("text-base font-mono font-normal flex items-center leading-none", colorClass)}>
