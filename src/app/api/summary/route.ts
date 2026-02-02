@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { NewsItem } from '@/lib/news';
-import { MarketStats } from '@/lib/stats';
+import { MarketStats, MarketQuote } from '@/lib/stats';
 
 export async function POST(request: Request) {
     try {
@@ -24,35 +24,48 @@ export async function POST(request: Request) {
 
         const now = new Date().toLocaleString('zh-TW', { timeZone: 'Asia/Taipei', hour12: false });
 
+        // Helper to format price with range
+        const fmtPrice = (quote: MarketQuote | undefined, prefix: string = '$') => {
+            if (!quote?.price) return 'N/A';
+            let str = `${prefix}${quote.price.toLocaleString(undefined, { maximumFractionDigits: 2 })} (${quote.changePercent >= 0 ? '+' : ''}${quote.changePercent.toFixed(2)}%)`;
+            if (quote.fiftyTwoWeekHigh && quote.fiftyTwoWeekLow) {
+                str += ` [52W Range: ${prefix}${quote.fiftyTwoWeekLow.toLocaleString()} - ${prefix}${quote.fiftyTwoWeekHigh.toLocaleString()}]`;
+            }
+            return str;
+        };
+
         // Construct the prompt
-        let prompt = `現在時間是 **${now}**。請根據以下提供的即時財經新聞與市場數據，撰寫一份「市場總結分析報告」。
+        let prompt = `現在時間是 **${now}**。你是「ColdNews Pro」的首席市場分析師，請撰寫一份專業的「全球金融市場總結報告」。
 
-**分析目標：**
-1.  **市場情緒判讀**：整合「恐懼與貪婪指數」、「VIX 波動率」與「美債殖利率曲線」等數據，研判目前市場處於順勢或避險狀態。
-2.  **趨勢連動分析**：
-    -   **美股與科技巨頭**：從 NVIDIA、Microsoft 等巨頭表現及費半指數，分析 AI 與科技股趨勢。
-    -   **台股與半導體**：結合台積電 ADR 溢價 (${tsmPremium}) 與台股 ETF/個股表現進行分析。
-3.  **資金流向觀察**：美債、美元指數、黃金與加密貨幣（比特幣）的資金移動跡象。
+**分析核心原則：**
+1.  **判讀趨勢位階**：**必須**參考數據中的「52週最高/最低價 (52W Range)」。
+    -   例如：若比特幣價格為 $70,000，但52週高點為 $120,000，**不可**稱其為歷史高點，應解讀為「高檔回調」或「修正階段」。
+    -   若價格接近 52週高點，則強調「創高動能」；接近低點則提示「築底跡象」。
+2.  **情緒與資金**：結合恐懼貪婪指數 (VIX, Fear & Greed) 與美債殖利率，判斷資金是 Risk-On (追逐風險) 還是 Risk-Off (避險)。
 
-**內容要求：**
--   **客觀專業**：基於數據事實進行論述，避免過度臆測。
--   **重點摘要**：針對重要數據或趨勢，請使用 **粗體** 標示。
--   **繁體中文**：使用台灣通用的財經術語。
+**報告結構：**
+1.  **市場情緒溫度計**：一句話定調目前市場氣氛（如：謹慎樂觀、恐慌拋售、高檔震盪）。
+2.  **關鍵趨勢解析**：
+    -   **加密貨幣**：比特幣目前價格相對於均線與歷史高點的位階分析。
+    -   **AI 與科技股**：NVIDIA、台積電 ADR 與費半指數的動能。
+    -   **宏觀因子**：美債殖利率與美元對資金流向的影響。
+3.  **操作風險提示**：針對當前數據異常或高乖離商品提出警示。
 
 **關鍵市場數據 (Market Data):**
 - **宏觀指標**:
   - 美債殖利率曲線 (10Y-2Y Spread): ${spread}% (10Y: ${stats.us10Y?.price}%, 2Y: ${stats.us2Y.price}%)
   - 美元指數: ${stats.dollarIndex?.price.toFixed(3)}
-  - 美元兌台幣 (USD/TWD): ${stats.usdtwd?.price.toFixed(3)}
+  - 美元兌台幣: ${stats.usdtwd?.price.toFixed(3)}
 - **情緒指標**:
   - 恐懼與貪婪指數: ${stats.stockFnG}
   - VIX 波動率: ${stats.vix?.toFixed(2)}
-  - 比特幣: $${stats.bitcoin?.price.toFixed(0)}
+  - 比特幣: ${fmtPrice(stats.bitcoin)}
 - **關鍵個股與半導體**:
-  - 台積電 ADR 溢價率: ${tsmPremium} (ADR: $${stats.tsmAdr.price}, TW: $${stats.tsmTw.price})
-  - 費半指數 (SOX): ${stats.sox.price} (${stats.sox.changePercent.toFixed(2)}%)
-  - AI 領頭羊 NVIDIA: $${stats.nvda.price} (${stats.nvda.changePercent.toFixed(2)}%)
-  - Microsoft: $${stats.msft.price} (${stats.msft.changePercent.toFixed(2)}%)
+  - 台積電 ADR 溢價率: ${tsmPremium} (ADR: ${fmtPrice(stats.tsmAdr)}, TW: $${stats.tsmTw.price})
+  - 費半指數 (SOX): ${fmtPrice(stats.sox, '')}
+  - AI 領頭羊 NVIDIA: ${fmtPrice(stats.nvda)}
+  - Microsoft: ${fmtPrice(stats.msft)}
+  - 黃金 (Gold): ${fmtPrice(stats.goldPrice)}
 
 **即時新聞重點 (News Highlights):**
 `;

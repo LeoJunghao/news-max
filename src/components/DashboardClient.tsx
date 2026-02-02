@@ -635,12 +635,13 @@ export function DashboardClient({ initialData, initialStats, lastUpdatedStr }: D
                                                 }
 
                                                 // 2. Handle List Items (* or -)
-                                                const listMatch = trimmedLine.match(/^[\-\*]\s+(.*)/);
+                                                // Improved regex to handle nested lists or different bullet styles
+                                                const listMatch = trimmedLine.match(/^[\-\*•]\s+(.*)/);
                                                 if (listMatch) {
                                                     return (
-                                                        <div key={i} className="flex gap-2 pl-1 mb-1">
-                                                            <span className="text-cyan-500 mt-1.5 shrink-0">•</span>
-                                                            <p className="text-justify">
+                                                        <div key={i} className="flex gap-3 pl-2 mb-2 group/list-item">
+                                                            <span className="text-cyan-500 mt-1.5 shrink-0 text-lg leading-none opacity-80 group-hover/list-item:opacity-100 transition-opacity">•</span>
+                                                            <p className="text-justify leading-relaxed text-slate-300">
                                                                 {parseContent(listMatch[1])}
                                                             </p>
                                                         </div>
