@@ -340,6 +340,11 @@ export async function getTX(): Promise<MarketQuote> {
             }
         }
 
+        // Sync sign of percentage with change amount
+        if (change < 0 && changePercent > 0) {
+            changePercent = -changePercent;
+        }
+
         return { price, change, changePercent };
 
     } catch (e) {
