@@ -113,7 +113,10 @@ export async function POST(request: Request) {
     -   **加密貨幣**：比特幣位相對於歷史高點分析。
     -   **AI 與科技**：NVIDIA、台積電 ADR 與費半動能。
     -   **宏觀因子**：美債殖利率與美元影響。
-3.  **操作風險提示**：針對異常商品提出警示。
+3.  **國際情勢與新聞綜整**：
+    -   綜合下方【美國、國際、地緣政治、台股、加密貨幣】新聞焦點。
+    -   分析重大事件(如戰爭、選舉、政策)對市場的潛在衝擊。
+4.  **操作風險提示**：針對異常商品提出警示。
 
 **關鍵市場數據 (Market Data):**
 - **宏觀指標**:
@@ -146,6 +149,7 @@ export async function POST(request: Request) {
         addNews('國際財經視野', news.intl);
         addNews('全球地緣政治', news.geo, 2);
         addNews('台灣財經要聞', news.tw);
+        addNews('加密貨幣快訊', news.crypto);
 
         prompt += `\n請綜合上述數據與新聞，為投資人提供一份清晰的市場總結與趨勢觀察：`;
 
