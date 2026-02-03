@@ -309,38 +309,36 @@ export async function getTX(): Promise<MarketQuote> {
         if (priceMatch) {
             const context = text.substring(priceMatch.index!, priceMatch.index! + 1500);
 
-            // 1. Try to find explicit change amount in format like >▲123.00</span> or >123.00</span>
-            // This usually appears before the percentage
+            // 1. Try to find explicit change amount
             const realChangeMatch = context.match(/>([▲▼])?([0-9,]+\.?[0-9]*)<\/span>/);
             if (realChangeMatch) {
                 let val = parseFloat(realChangeMatch[2].replace(/,/g, ''));
                 if (realChangeMatch[1] === '▼') val = -val;
-                // If arrow is up (▲) or missing, we assume positive for now, BUT
-                // if it's missing, it technically could be negative if the number itself has a minus sign (not common in this HTML structure for change)
-                // However, usually down has ▼. 
-
-                // Let's refine: if we found the change amount, use it.
                 change = val;
             }
 
             // 2. Get Change Percent
-            // Matches >+1.23%</span> or >-1.23%</span> or >(0.65%)</span>
             const pctMatch = context.match(/>\(?([+\-]?[0-9,]+\.?[0-9]*)%\)?<\/span>/);
             if (pctMatch) {
                 changePercent = parseFloat(pctMatch[1].replace(/,/g, ''));
             }
 
+            // 3. Fallback/Override: Check for color class "C($c-trend-down)" which means negative (Green in TW)
+            // Yahoo TW uses 'C($c-trend-down)' for Down/Green and 'C($c-trend-up)' for Up/Red
+            const isTrendDown = context.includes('C($c-trend-down)');
+            if (isTrendDown) {
+                if (change > 0) change = -change;
+                if (changePercent > 0) changePercent = -changePercent;
+            }
+
             // Fallback for change calculation if scraping failed but we have percent and price
             if (change === 0 && changePercent !== 0 && price !== 0) {
-                // price = prev * (1 + pct/100)
-                // change = price - prev
-                // prev = price / (1 + pct/100)
                 const prev = price / (1 + changePercent / 100);
                 change = price - prev;
             }
         }
 
-        // Sync sign of percentage with change amount
+        // Sync sign of percentage with change amount (Double check)
         if (change < 0 && changePercent > 0) {
             changePercent = -changePercent;
         }
