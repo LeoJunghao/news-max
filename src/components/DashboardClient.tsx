@@ -726,7 +726,7 @@ function IndexListItem({ label, data, loading, url }: { label: string, data?: Ma
                     {data.price.toLocaleString(undefined, { maximumFractionDigits: 2 })}
                 </span>
                 <span className={cn("text-base font-mono font-normal flex items-center leading-none", colorClass)}>
-                    {isUp ? '▲' : '▼'}{data.change !== undefined ? ` ${Math.abs(data.change).toFixed(2)}` : ''} ({Math.abs(data.changePercent).toFixed(2)}%)
+                    {isUp ? '▲' : '▼'} {Math.abs(data.changePercent).toFixed(2)}%
                 </span>
             </div>
         </div>
@@ -765,7 +765,7 @@ function IndexItem({ label, data, loading, url }: { label: string, data?: Market
                 </span>
                 {/* Font size reduced (text-xs -> text-[10px]) */}
                 <span className={cn("text-sm font-mono font-normal flex items-center", colorClass)}>
-                    {isUp ? '▲' : '▼'} {data.change !== undefined ? `${Math.abs(data.change).toFixed(2)} ` : ''}{Math.abs(data.changePercent).toFixed(2)}%
+                    {isUp ? '▲' : '▼'} {Math.abs(data.changePercent).toFixed(2)}%
                 </span>
             </div>
         </div>
