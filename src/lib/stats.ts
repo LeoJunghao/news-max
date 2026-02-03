@@ -160,6 +160,51 @@ async function getCNBCPrice(symbol: string, fallback: number): Promise<MarketQuo
     }
 }
 
+// Helper to get Quote from History (Robust Prev Close)
+async function getHistoryQuote(symbol: string): Promise<MarketQuote> {
+    try {
+        // Fetch 5 days to ensure we have valid previous close even with holidays
+        const res = await fetch(`https://query1.finance.yahoo.com/v8/finance/chart/${symbol}?interval=1d&range=5d`, { next: { revalidate: 60 } });
+        if (!res.ok) return { price: 0, changePercent: 0 };
+        const data = await res.json();
+        const result = data.chart?.result?.[0];
+        if (!result) return { price: 0, changePercent: 0 };
+
+        const quotes = result.indicators?.quote?.[0]?.close;
+        const validCloses = quotes ? quotes.filter((c: number | null) => c !== null) : [];
+
+        if (!validCloses || validCloses.length < 2) {
+            // Fallback to meta if history is missing or insufficient
+            const meta = result.meta;
+            const price = meta?.regularMarketPrice || 0;
+            const prev = meta?.chartPreviousClose || price;
+            return {
+                price,
+                change: price - prev,
+                changePercent: prev ? ((price - prev) / prev) * 100 : 0
+            };
+        }
+
+        const price = validCloses[validCloses.length - 1]; // Current/Latest
+        const prev = validCloses[validCloses.length - 2];  // Previous Closing
+
+        const change = price - prev;
+        const changePercent = prev ? (change / prev) * 100 : 0;
+
+        return {
+            price,
+            change,
+            changePercent,
+            fiftyTwoWeekHigh: result.meta?.fiftyTwoWeekHigh,
+            fiftyTwoWeekLow: result.meta?.fiftyTwoWeekLow
+        };
+
+    } catch (e) {
+        console.error(`History Fetch Error for ${symbol}`, e);
+        return { price: 0, changePercent: 0 };
+    }
+}
+
 // 1. VIX
 async function getVIX(): Promise<number> {
     return getYahooPrice('%5EVIX', 20);
@@ -232,7 +277,7 @@ async function getSP500Index(): Promise<MarketQuote> { return getYahooQuote('%5E
 async function getDJI(): Promise<MarketQuote> { return getYahooQuote('YM=F'); }
 async function getNasdaq(): Promise<MarketQuote> { return getYahooQuote('NQ=F'); } // Nasdaq 100 Futures
 async function getNasdaqComposite(): Promise<MarketQuote> { return getYahooQuote('%5EIXIC'); } // Nasdaq Composite
-async function getTWII(): Promise<MarketQuote> { return getYahooQuote('%5ETWII'); }
+async function getTWII(): Promise<MarketQuote> { return getHistoryQuote('%5ETWII'); } // Use history for robust prev close
 
 // Scrape Yahoo TW for Taiwan Futures (WTX&)
 // Scrape Yahoo TW for Taiwan Futures (WTX&)
