@@ -364,13 +364,15 @@ async function getCryptoFnG(): Promise<number> {
 async function getStockFnG(currentVIX: number): Promise<number> {
     try {
         const res = await fetch('https://production.dataviz.cnn.io/index/fearandgreed/graphdata', {
-            headers: { 'User-Agent': 'Mozilla/5.0' },
-            next: { revalidate: 3600 }
+            headers: {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+            },
+            next: { revalidate: 600 }
         });
         if (res.ok) {
             const data = await res.json();
             const today = data.fear_and_greed?.score;
-            if (today !== undefined) return Number(today);
+            if (today !== undefined) return Math.round(Number(today));
         }
     } catch (e) {
     }

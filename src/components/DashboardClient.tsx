@@ -197,7 +197,8 @@ export function DashboardClient({ initialData, initialStats, lastUpdatedStr }: D
                                 initialData={stats?.tx}
                                 url="https://tw.stock.yahoo.com/future/WTX&"
                                 apiPath="/api/quote/tx"
-                                refreshInterval={30000}
+                                refreshInterval={20000}
+                                showNegativeSign={true}
                             />
                         </div>
                     </div>
@@ -699,7 +700,7 @@ export function DashboardClient({ initialData, initialStats, lastUpdatedStr }: D
 
 
 
-function IndexListItem({ label, data, loading, url }: { label: string, data?: MarketQuote, loading: boolean, url?: string }) {
+function IndexListItem({ label, data, loading, url, showNegativeSign }: { label: string, data?: MarketQuote, loading: boolean, url?: string, showNegativeSign?: boolean }) {
     if (loading || !data) return (
         <div className="flex flex-col justify-center p-3 rounded-lg bg-slate-900/50 border border-slate-800 animate-pulse h-[70px]">
             <div className="h-3 w-24 bg-slate-800 rounded mb-2"></div>
@@ -728,7 +729,7 @@ function IndexListItem({ label, data, loading, url }: { label: string, data?: Ma
                 <span className={cn("text-base font-mono font-normal flex items-center leading-none",
                     data.changePercent > 0 ? 'text-red-400' : data.changePercent < 0 ? 'text-green-400' : 'text-slate-400'
                 )}>
-                    {data.changePercent > 0 ? '▲' : data.changePercent < 0 ? '▼' : ''} {Math.abs(data.changePercent).toFixed(2)}%
+                    {data.changePercent > 0 ? '▲' : data.changePercent < 0 ? '▼' : ''} {(showNegativeSign && data.changePercent < 0) ? data.changePercent.toFixed(2) : Math.abs(data.changePercent).toFixed(2)}%
                 </span>
             </div>
         </div>
@@ -836,13 +837,15 @@ function RealtimeIndexListItem({
     initialData,
     url,
     apiPath,
-    refreshInterval = 30000
+    refreshInterval = 30000,
+    showNegativeSign
 }: {
     label: string,
     initialData?: MarketQuote,
     url?: string,
     apiPath: string,
-    refreshInterval?: number
+    refreshInterval?: number,
+    showNegativeSign?: boolean
 }) {
     const [data, setData] = useState<MarketQuote | undefined>(initialData);
 
@@ -865,7 +868,7 @@ function RealtimeIndexListItem({
         return () => clearInterval(interval);
     }, [apiPath, label, refreshInterval]);
 
-    return <IndexListItem label={label} data={data} loading={!data} url={url} />;
+    return <IndexListItem label={label} data={data} loading={!data} url={url} showNegativeSign={showNegativeSign} />;
 }
 
 function InstitutionalRow({ data }: { data: InstitutionalStats }) {
