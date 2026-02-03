@@ -725,8 +725,10 @@ function IndexListItem({ label, data, loading, url }: { label: string, data?: Ma
                 <span className="text-xl font-normal font-mono text-slate-100 leading-none">
                     {data.price.toLocaleString(undefined, { maximumFractionDigits: 2 })}
                 </span>
-                <span className={cn("text-base font-mono font-normal flex items-center leading-none", colorClass)}>
-                    {isUp ? '▲' : '▼'} {Math.abs(data.changePercent).toFixed(2)}%
+                <span className={cn("text-base font-mono font-normal flex items-center leading-none",
+                    data.changePercent > 0 ? 'text-red-400' : data.changePercent < 0 ? 'text-green-400' : 'text-slate-400'
+                )}>
+                    {data.changePercent > 0 ? '▲' : data.changePercent < 0 ? '▼' : ''} {Math.abs(data.changePercent).toFixed(2)}%
                 </span>
             </div>
         </div>
@@ -764,8 +766,10 @@ function IndexItem({ label, data, loading, url }: { label: string, data?: Market
                     {data.price.toLocaleString(undefined, { maximumFractionDigits: 2 })}
                 </span>
                 {/* Font size reduced (text-xs -> text-[10px]) */}
-                <span className={cn("text-sm font-mono font-normal flex items-center", colorClass)}>
-                    {isUp ? '▲' : '▼'} {Math.abs(data.changePercent).toFixed(2)}%
+                <span className={cn("text-sm font-mono font-normal flex items-center",
+                    data.changePercent > 0 ? 'text-red-400' : data.changePercent < 0 ? 'text-green-400' : 'text-slate-400'
+                )}>
+                    {data.changePercent > 0 ? '▲' : data.changePercent < 0 ? '▼' : ''} {Math.abs(data.changePercent).toFixed(2)}%
                 </span>
             </div>
         </div>
