@@ -642,7 +642,7 @@ export function DashboardClient({ initialData, initialStats, lastUpdatedStr }: D
                                                     return (
                                                         <div key={i} className="flex gap-2 pl-1 mb-1 group/list-item">
                                                             <span className="text-cyan-500 mt-1 shrink-0 text-base leading-none opacity-80 group-hover/list-item:opacity-100 transition-opacity">•</span>
-                                                            <p className="text-justify leading-snug text-slate-300 text-sm md:text-base">
+                                                            <p className="text-justify leading-snug text-slate-300 text-base">
                                                                 {parseContent(listMatch[1])}
                                                             </p>
                                                         </div>
@@ -651,7 +651,7 @@ export function DashboardClient({ initialData, initialStats, lastUpdatedStr }: D
 
                                                 // 3. Standard Paragraph
                                                 return (
-                                                    <p key={i} className="text-justify mb-1 leading-snug text-slate-300 text-sm md:text-base">
+                                                    <p key={i} className="text-justify mb-1 leading-snug text-slate-300 text-base">
                                                         {parseContent(trimmedLine)}
                                                     </p>
                                                 );
